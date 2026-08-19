@@ -1,0 +1,197 @@
+/* ═══════════════════════════════════════════════════
+   DIGITAL DENTAL ZONE — Animations
+   Performance: All entrances complete within ~1s
+   ═══════════════════════════════════════════════════ */
+
+/* ── Scroll Reveal Base States ── */
+.reveal,
+.reveal-left,
+.reveal-right,
+.reveal-scale {
+  opacity: 0;
+  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+  will-change: opacity, transform;
+}
+
+.reveal       { transform: translateY(30px); }
+.reveal-left  { transform: translateX(-40px); }
+.reveal-right { transform: translateX(40px); }
+.reveal-scale { transform: scale(0.92); }
+
+/* ── Revealed State ── */
+.reveal.revealed,
+.reveal-left.revealed,
+.reveal-right.revealed,
+.reveal-scale.revealed {
+  opacity: 1;
+  transform: translate(0) scale(1);
+}
+
+/* ── Stagger Children ── */
+.stagger > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+}
+.stagger.revealed > *:nth-child(1) { transition-delay: 0.05s; }
+.stagger.revealed > *:nth-child(2) { transition-delay: 0.12s; }
+.stagger.revealed > *:nth-child(3) { transition-delay: 0.19s; }
+.stagger.revealed > *:nth-child(4) { transition-delay: 0.26s; }
+.stagger.revealed > *:nth-child(5) { transition-delay: 0.33s; }
+.stagger.revealed > *:nth-child(6) { transition-delay: 0.40s; }
+.stagger.revealed > *:nth-child(7) { transition-delay: 0.47s; }
+.stagger.revealed > * {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.stagger.revealed > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Hero Entrance ── */
+.hero-animate {
+  opacity: 0;
+  transform: translateY(24px);
+  animation: heroFadeIn 0.7s var(--ease-out) forwards;
+}
+.hero-animate:nth-child(1) { animation-delay: 0.1s; }
+.hero-animate:nth-child(2) { animation-delay: 0.2s; }
+.hero-animate:nth-child(3) { animation-delay: 0.3s; }
+.hero-animate:nth-child(4) { animation-delay: 0.4s; }
+.hero-animate:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes heroFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Hero Visual (image) ── */
+.hero-visual-animate {
+  opacity: 0;
+  transform: translateX(40px) scale(0.95);
+  animation: heroVisualIn 0.8s var(--ease-out) 0.3s forwards;
+}
+
+@keyframes heroVisualIn {
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* ── Floating Badges ── */
+.float-slow {
+  animation: floatSlow 6s ease-in-out infinite;
+}
+.float-med {
+  animation: floatMed 4s ease-in-out infinite;
+}
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px); }
+  50%      { transform: translateY(-12px); }
+}
+
+@keyframes floatMed {
+  0%, 100% { transform: translateY(0px); }
+  50%      { transform: translateY(-8px); }
+}
+
+/* ── Pulse Glow (WhatsApp button) ── */
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
+  50%      { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
+}
+
+/* ── Gradient Shimmer ── */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ── Counter Number Pop ── */
+@keyframes counterPop {
+  0%   { transform: scale(0.5); opacity: 0; }
+  70%  { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ── Card Hover Lift ── */
+.hover-lift {
+  transition: transform var(--duration-normal) var(--ease-out),
+              box-shadow var(--duration-normal) var(--ease-out);
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lift);
+}
+
+/* ── Nav Scroll Shrink ── */
+nav.scrolled {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  background: rgba(58, 11, 22, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* ── Accordion Animation ── */
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s var(--ease-out), padding 0.4s var(--ease-out);
+}
+.faq-item.active .faq-answer {
+  max-height: 300px;
+  padding-top: 12px;
+}
+.faq-icon {
+  transition: transform 0.3s var(--ease-out);
+}
+.faq-item.active .faq-icon {
+  transform: rotate(45deg);
+}
+
+/* ── Before/After Slider ── */
+.ba-slider-handle {
+  transition: left 0s;
+}
+.ba-overlay {
+  transition: clip-path 0s;
+}
+
+/* ── Mobile Menu ── */
+.nav-links.open {
+  animation: slideDown 0.35s var(--ease-out) forwards;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Reduce motion for accessibility ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal, .reveal-left, .reveal-right, .reveal-scale {
+    opacity: 1;
+    transform: none;
+  }
+  .stagger > * {
+    opacity: 1;
+    transform: none;
+  }
+}

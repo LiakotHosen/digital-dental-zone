@@ -1,0 +1,104 @@
+/* ═══════════════════════════════════════════════════
+   DIGITAL DENTAL ZONE — Design Tokens
+   Palette: "Crimson Rose" (LOCKED)
+   Source: Selected Design color for website_&_homepag.html
+   ═══════════════════════════════════════════════════ */
+
+:root {
+  /* ── Crimson Rose Palette ── */
+  --darkest:      #3A0B16;
+  --dark:         #5C1322;
+  --dark-mid:     #7B1F2E;
+  --dark-accent:  #8B2635;
+  --accent2:      #C4485E;
+  --accent:       #E8849A;
+  --white:        #FFFFFF;
+  --muted:        rgba(255, 255, 255, 0.65);
+  --muted-light:  rgba(255, 255, 255, 0.45);
+  --muted-dim:    rgba(255, 255, 255, 0.25);
+
+  /* ── Semantic Colors ── */
+  --bg-body:      var(--darkest);
+  --bg-section:   rgba(0, 0, 0, 0.15);
+  --bg-card:      rgba(255, 255, 255, 0.06);
+  --bg-card-hover:rgba(255, 255, 255, 0.10);
+  --border-glass: rgba(255, 255, 255, 0.12);
+  --border-accent:rgba(232, 132, 154, 0.30);
+  --glow-accent:  rgba(196, 72, 94, 0.50);
+  --glow-soft:    rgba(196, 72, 94, 0.20);
+  --text-primary: var(--white);
+  --text-secondary:var(--muted);
+  --text-accent:  var(--accent);
+
+  /* ── Typography ── */
+  --ff-body:      'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ff-heading:   'Playfair Display', Georgia, 'Times New Roman', serif;
+  --ff-bengali:   'Noto Sans Bengali', 'Hind Siliguri', sans-serif;
+
+  --fs-xs:   12px;
+  --fs-sm:   13px;
+  --fs-base: 15px;
+  --fs-md:   16px;
+  --fs-lg:   18px;
+  --fs-xl:   22px;
+  --fs-2xl:  28px;
+  --fs-3xl:  36px;
+  --fs-4xl:  48px;
+  --fs-5xl:  64px;
+  --fs-hero: clamp(48px, 8vw, 80px);
+
+  --fw-light:     300;
+  --fw-regular:   400;
+  --fw-medium:    500;
+  --fw-semibold:  600;
+  --fw-bold:      700;
+  --fw-extrabold: 800;
+  --fw-black:     900;
+
+  --lh-tight:   1.0;
+  --lh-heading: 1.1;
+  --lh-body:    1.7;
+  --ls-tight:   -3px;
+  --ls-normal:  0;
+  --ls-wide:    1px;
+  --ls-wider:   2px;
+
+  /* ── Spacing ── */
+  --space-xs:  8px;
+  --space-sm:  12px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  36px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 80px;
+  --space-5xl: 120px;
+
+  /* ── Layout ── */
+  --max-width:  1200px;
+  --nav-height: 72px;
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  16px;
+  --radius-xl:  24px;
+  --radius-pill: 50px;
+  --radius-full: 50%;
+
+  /* ── Glass Effect ── */
+  --glass-bg:       rgba(255, 255, 255, 0.06);
+  --glass-bg-strong:rgba(255, 255, 255, 0.10);
+  --glass-border:   1px solid rgba(255, 255, 255, 0.12);
+  --glass-blur:     blur(20px);
+
+  /* ── Shadows ── */
+  --shadow-glow:    0 0 80px var(--glow-accent), 0 0 200px var(--glow-soft);
+  --shadow-card:    0 4px 30px rgba(0, 0, 0, 0.3);
+  --shadow-lift:    0 8px 40px rgba(0, 0, 0, 0.4);
+
+  /* ── Transitions ── */
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-fast:   200ms;
+  --duration-normal: 400ms;
+  --duration-slow:   700ms;
+}
