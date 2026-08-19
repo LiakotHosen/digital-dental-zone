@@ -75,17 +75,68 @@
 <section id="blog">
   <div class="section-inner">
     <div class="section-tag reveal">
-      <span data-lang-en>Dental Blog</span>
-      <span data-lang-bn>ডেন্টাল ব্লগ</span>
+      <span data-lang-en>Dental Blog &amp; Patient Guides</span>
+      <span data-lang-bn>ডেন্টাল ব্লগ ও পরামর্শ</span>
     </div>
     <h1 class="section-h2 reveal">
       <span data-lang-en>Expert Dental Advice<br><em>from Dr. Nusrat</em></span>
       <span data-lang-bn>বিশেষজ্ঞ দাঁতের পরামর্শ<br><em>ডাঃ নুসরাতের কাছ থেকে</em></span>
     </h1>
     <p class="section-sub reveal">
-      <span data-lang-en>Practical, honest guidance about digital dentistry, implants, root canals and more — written for the people of Barishal.</span>
-      <span data-lang-bn>ডিজিটাল ডেন্টিস্ট্রি, ইমপ্ল্যান্ট, রুট ক্যানাল ও আরও অনেক বিষয়ে ব্যবহারিক, সৎ পরামর্শ — বরিশালবাসীর জন্য।</span>
+      <span data-lang-en>Practical, honest guidance about digital dentistry, implants, root canals, crowns, orthodontics and child dental care — written for the people of Barishal.</span>
+      <span data-lang-bn>ডিজিটাল ডেন্টিস্ট্রি, ইমপ্ল্যান্ট, রুট ক্যানাল, ক্যাপ, ব্রেসেস ও শিশুদের দাঁতের যত্ন নিয়ে ব্যবহারিক ও সৎ পরামর্শ — বরিশালবাসীর জন্য।</span>
     </p>
+
+    <!-- Search & Filter Controls -->
+    <div class="blog-controls-wrapper reveal">
+      <div class="blog-search-bar">
+        <svg class="blog-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="blog-search-input" placeholder="Search dental articles, symptoms, costs... / পরামর্শ ও খরচ খুঁজুন..." aria-label="Search blog posts">
+        <button type="button" id="blog-search-clear" class="blog-search-clear" aria-label="Clear search">✕</button>
+      </div>
+
+      <div class="blog-filter-pills" id="blog-filter-pills">
+        <button class="blog-pill active" data-filter="all">
+          <span data-lang-en>All Articles</span><span data-lang-bn>সকল পোস্ট</span>
+          <span class="blog-pill-count" id="count-all">12</span>
+        </button>
+        <button class="blog-pill" data-filter="bn">
+          <span>বাংলা</span>
+          <span class="blog-pill-count" id="count-bn">8</span>
+        </button>
+        <button class="blog-pill" data-filter="en">
+          <span>English</span>
+          <span class="blog-pill-count" id="count-en">4</span>
+        </button>
+        <button class="blog-pill" data-filter="implant">
+          <span data-lang-en>Implants &amp; Surgery</span><span data-lang-bn>ইমপ্ল্যান্ট ও সার্জারি</span>
+          <span class="blog-pill-count" id="count-implant">0</span>
+        </button>
+        <button class="blog-pill" data-filter="rct">
+          <span data-lang-en>Root Canal</span><span data-lang-bn>রুট ক্যানাল</span>
+          <span class="blog-pill-count" id="count-rct">0</span>
+        </button>
+        <button class="blog-pill" data-filter="crown">
+          <span data-lang-en>Crowns &amp; Aesthetics</span><span data-lang-bn>ক্যাপ ও ক্রাউন</span>
+          <span class="blog-pill-count" id="count-crown">0</span>
+        </button>
+        <button class="blog-pill" data-filter="ortho">
+          <span data-lang-en>Orthodontics &amp; Aligners</span><span data-lang-bn>বাঁকা দাঁত ও অ্যালাইনার</span>
+          <span class="blog-pill-count" id="count-ortho">0</span>
+        </button>
+        <button class="blog-pill" data-filter="kids">
+          <span data-lang-en>Kids Dental</span><span data-lang-bn>শিশুদের যত্ন</span>
+          <span class="blog-pill-count" id="count-kids">0</span>
+        </button>
+      </div>
+
+      <div class="blog-results-meta" id="blog-results-meta">
+        <span id="blog-results-text">Showing all 12 articles</span>
+      </div>
+    </div>
 
     <div class="blog-grid" id="blog-grid"></div>
   </div>
