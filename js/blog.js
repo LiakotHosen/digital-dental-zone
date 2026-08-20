@@ -17,7 +17,9 @@
   /* ── Enhanced Markdown → HTML Parser ── */
   function mdToHtml(md) {
     if (!md) return '';
-    const lines = md.split('\n');
+    if (Array.isArray(md)) md = md.join('\n');
+    const normalized = md.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    const lines = normalized.split('\n');
     let html = '';
     let inList = false;
     let listType = '';
@@ -122,8 +124,10 @@
   }
 
   function fmtDate(iso) {
+    if (!iso) return '';
     try {
       const d = new Date(iso);
+      if (isNaN(d.getTime())) return '';
       return d.toLocaleDateString(isBn() ? 'bn-BD' : 'en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
     } catch (e) {
       return '';
@@ -147,34 +151,73 @@
     return 'general';
   }
 
+  /* ── Slug extraction helper ── */
+  function getSlug() {
+    const params = new URLSearchParams(window.location.search);
+    const pathMatch = window.location.pathname.match(/\/blog\/([^/]+)\/?$/);
+    let pathSlug = pathMatch ? decodeURIComponent(pathMatch[1]) : '';
+    if (['post.html', 'post', 'index.html', 'index', ''].includes(pathSlug.toLowerCase())) {
+      pathSlug = '';
+    }
+    const querySlug = (params.get('slug') || '').trim();
+    return pathSlug || querySlug || '';
+  }
+
+  /* ── Post finder helper ── */
+  function findPostBySlug(posts, slug) {
+    if (!slug || !posts || !posts.length) return null;
+    const s = slug.trim().toLowerCase();
+
+    // 1. Exact match
+    let found = posts.find(p => (p.slug || '').trim().toLowerCase() === s);
+    if (found) return found;
+
+    // 2. Base slug match without language suffix
+    const baseSlug = s.replace(/-(bn|en)$/, '');
+    found = posts.find(p => {
+      const pBase = (p.slug || '').toLowerCase().replace(/-(bn|en)$/, '');
+      return pBase === baseSlug;
+    });
+    if (found) return found;
+
+    // 3. Partial inclusion match
+    found = posts.find(p => {
+      const pSlug = (p.slug || '').toLowerCase();
+      return pSlug.includes(baseSlug) || baseSlug.includes(pSlug);
+    });
+    return found || null;
+  }
+
   /* ── Load posts from Supabase or fallback ── */
   async function loadPosts() {
     if (cachedPosts && cachedPosts.length > 0) return cachedPosts;
     try {
-      const client = await window.DDZ.supabase();
-      if (client) {
-        const { data, error } = await client
-          .from('blog_posts')
-          .select('*')
-          .order('published_at', { ascending: false });
-        if (!error && data && data.length > 0) {
-          cachedPosts = data.map((p) => ({
-            slug: p.slug,
-            language: p.language || (p.title_bn && !p.title_en ? 'bn' : 'en'),
-            title_en: p.title_en, title_bn: p.title_bn,
-            excerpt_en: p.excerpt_en, excerpt_bn: p.excerpt_bn,
-            body_en: p.body_en, body_bn: p.body_bn,
-            tags: p.tags || [],
-            author: p.author || 'Dr. Nusrat Naiem',
-            published: p.published_at,
-            cover: p.cover_image,
-            category: getPostCategory(p)
-          }));
-          return cachedPosts;
+      if (window.DDZ && window.DDZ.supabase) {
+        const client = await window.DDZ.supabase();
+        if (client) {
+          const { data, error } = await client
+            .from('blog_posts')
+            .select('*')
+            .order('published_at', { ascending: false });
+          if (!error && data && data.length > 0) {
+            cachedPosts = data.map((p) => ({
+              slug: p.slug,
+              language: p.language || (p.title_bn && !p.title_en ? 'bn' : 'en'),
+              title_en: p.title_en, title_bn: p.title_bn,
+              excerpt_en: p.excerpt_en, excerpt_bn: p.excerpt_bn,
+              body_en: p.body_en, body_bn: p.body_bn,
+              tags: p.tags || [],
+              author: p.author || 'Dr. Nusrat Naiem',
+              published: p.published_at,
+              cover: p.cover_image,
+              category: getPostCategory(p)
+            }));
+            return cachedPosts;
+          }
         }
       }
     } catch (e) {
-      console.warn('[DDZ Blog] Offline mode, using local blog data fallback.');
+      console.warn('[DDZ Blog] Supabase fetch error, using local fallback:', e);
     }
     cachedPosts = FALLBACK.map(p => ({
       ...p,
@@ -185,7 +228,6 @@
 
   /* ── Filter Posts Helper ── */
   function filterPosts(posts, filter, query) {
-    const isBengali = isBn();
     return posts.filter(post => {
       // 1. Language or Category Tab Filter
       if (filter === 'bn' && post.language !== 'bn' && !post.title_bn) return false;
@@ -235,7 +277,20 @@
     const grid = document.getElementById('blog-grid');
     if (!grid) return;
 
+    // Fast initial sync render from fallback
+    const initialList = (cachedPosts || FALLBACK).map(p => ({
+      ...p,
+      category: p.category || getPostCategory(p)
+    }));
+    drawCards(grid, initialList);
+
+    // Background sync from Supabase
     const allPosts = await loadPosts();
+    drawCards(grid, allPosts);
+  }
+
+  function drawCards(grid, allPosts) {
+    if (!grid) return;
     const isBengali = isBn();
     updateCounts(allPosts);
 
@@ -332,7 +387,6 @@
       grid.appendChild(card);
     });
 
-    // Animate cards
     setTimeout(() => {
       grid.querySelectorAll('.reveal-scale').forEach((el) => el.classList.add('revealed'));
     }, 50);
@@ -380,32 +434,43 @@
     const container = document.getElementById('blog-post');
     if (!container) return;
 
-    const params = new URLSearchParams(window.location.search);
-    const pathMatch = window.location.pathname.match(/\/blog\/([^/]+)\/?$/);
-    const slug = (pathMatch ? decodeURIComponent(pathMatch[1]) : '') || params.get('slug') || '';
-
-    const posts = await loadPosts();
+    const slug = getSlug();
     const isBengali = isBn();
 
-    let post = posts.find((p) => (p.slug || '') === slug);
-    if (!post && slug) {
-      post = posts.find(p => p.slug && p.slug.includes(slug));
-    }
-    if (!post) {
-      post = posts[0];
-    }
+    // 1. Fast sync render from FALLBACK
+    const fallbackList = (window.DDZ_BLOG_POSTS || []).map(p => ({
+      ...p,
+      category: getPostCategory(p)
+    }));
 
-    if (!post) {
+    let initialPost = findPostBySlug(fallbackList, slug);
+    if (initialPost) {
+      renderPostContent(container, initialPost, isBengali);
+    } else {
       container.innerHTML = `
-        <div style="text-align:center;padding:60px 20px;">
-          <h2>${isBengali ? 'পোস্টটি পাওয়া যায়নি।' : 'Post not found.'}</h2>
-          <a href="/blog/" class="btn-primary" style="margin-top:16px;">← ${isBengali ? 'ব্লগে ফিরে যান' : 'Back to Blog'}</a>
+        <div style="text-align:center;padding:60px 20px;color:var(--muted);">
+          <div style="font-size:36px;margin-bottom:12px;">🦷</div>
+          <p>${isBengali ? 'পোস্ট লোড হচ্ছে...' : 'Loading dental article...'}</p>
         </div>
       `;
-      return;
     }
 
-    const title = pick(post, 'title') || post.title_bn || post.title_en || '';
+    // 2. Fetch fresh posts from Supabase / cache
+    const posts = await loadPosts();
+    const finalPost = findPostBySlug(posts, slug);
+
+    if (finalPost) {
+      renderPostContent(container, finalPost, isBn());
+    } else if (!initialPost) {
+      renderNotFound(container, posts, isBn());
+    }
+  }
+
+  /* ── Render Post HTML ── */
+  function renderPostContent(container, post, isBengali) {
+    if (!container || !post) return;
+
+    const title = pick(post, 'title') || post.title_bn || post.title_en || 'Dental Article';
     const body = pick(post, 'body') || post.body_bn || post.body_en || '';
     const tag = (post.tags && post.tags[0]) || (isBengali ? 'দাঁতের চিকিৎসা' : 'Dental Care');
 
@@ -424,7 +489,7 @@
       <div class="blog-post-meta">
         <span>👨‍⚕️ ${post.author || (isBengali ? 'ডাঃ নুসরাত নাঈম' : 'Dr. Nusrat Naiem')}</span>
         <span>·</span>
-        <span>📍 ডিজিটাল ডেন্টাল জোন, বরিশাল</span>
+        <span>📍 ${isBengali ? 'ডিজিটাল ডেন্টাল জোন, বরিশাল' : 'Digital Dental Zone, Barishal'}</span>
       </div>
     `;
 
@@ -470,8 +535,35 @@
     container.appendChild(cta);
   }
 
+  /* ── Render 404 / Not Found Screen ── */
+  function renderNotFound(container, posts, isBengali) {
+    if (!container) return;
+    const popular = (posts || FALLBACK).slice(0, 3);
+
+    container.innerHTML = `
+      <div class="blog-not-found" style="text-align:center;padding:60px 20px;max-width:700px;margin:0 auto;">
+        <div style="font-size:48px;margin-bottom:16px;">🔍</div>
+        <h2 style="font-size:28px;margin-bottom:12px;">${isBengali ? 'পোস্টটি পাওয়া যায়নি' : 'Post Not Found'}</h2>
+        <p style="color:var(--muted);margin-bottom:24px;">
+          ${isBengali ? 'আপনি যে পোস্টটি খুঁজছেন তা সরানো হয়েছে অথবা লিংকটি পরিবর্তিত হয়েছে। নিচের অন্যান্য দরকারি পোস্টগুলো পড়তে পারেন:' : 'The article you are looking for might have been moved or renamed. Explore our latest guides below:'}
+        </p>
+        <div style="display:flex;flex-direction:column;gap:12px;text-align:left;margin-bottom:32px;">
+          ${popular.map(p => `
+            <a href="/blog/${encodeURIComponent(p.slug)}" class="card hover-lift" style="display:block;padding:16px 20px;text-decoration:none;border-radius:12px;background:var(--card-bg, rgba(255,255,255,0.04));border:1px solid var(--border-color, rgba(255,255,255,0.08));">
+              <strong style="color:var(--text, #fff);display:block;font-size:16px;margin-bottom:4px;">${pick(p, 'title') || p.title_bn || p.title_en}</strong>
+              <span style="color:var(--muted, #999);font-size:13px;">${fmtDate(p.published)} · 🦷 ${isBengali ? 'পড়ুন →' : 'Read article →'}</span>
+            </a>
+          `).join('')}
+        </div>
+        <a href="/blog/" class="btn-primary" style="display:inline-flex;align-items:center;gap:8px;">
+          ← ${isBengali ? 'সকল ব্লগ পেজে ফিরে যান' : 'Back to All Articles'}
+        </a>
+      </div>
+    `;
+  }
+
   /* ── Init ── */
-  document.addEventListener('DOMContentLoaded', () => {
+  function initBlog() {
     const page = document.body.dataset.blogPage;
     if (page === 'listing') {
       setupControls();
@@ -485,5 +577,11 @@
       if (page === 'listing') renderListing();
       if (page === 'post') renderPost();
     });
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initBlog);
+  } else {
+    initBlog();
+  }
 })();

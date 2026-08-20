@@ -30,14 +30,36 @@
     return new Promise((resolve) => {
       if (supabaseClient) return resolve(supabaseClient);
 
-      const attempt = () => resolve(init());
+      // Safety timeout: resolve to null after 2500ms so the UI never blocks
+      const timeoutId = setTimeout(() => {
+        resolve(init() || null);
+      }, 2500);
+
+      const attempt = () => {
+        clearTimeout(timeoutId);
+        resolve(init());
+      };
 
       if (window.supabase) return attempt();
+
+      // Check if script is already in document
+      const existingScript = document.querySelector('script[src*="supabase-js"]');
+      if (existingScript) {
+        existingScript.addEventListener('load', attempt);
+        existingScript.addEventListener('error', () => {
+          clearTimeout(timeoutId);
+          resolve(null);
+        });
+        return;
+      }
 
       const script = document.createElement('script');
       script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.48.1';
       script.onload = attempt;
-      script.onerror = () => resolve(null);
+      script.onerror = () => {
+        clearTimeout(timeoutId);
+        resolve(null);
+      };
       document.head.appendChild(script);
     });
   };
