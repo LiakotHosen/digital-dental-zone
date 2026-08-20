@@ -5,6 +5,7 @@
 
 @import url('variables.css');
 @import url('animations.css');
+@import url('icons.css');
 
 /* ── Reset ── */
 *, *::before, *::after {

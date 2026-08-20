@@ -1,0 +1,146 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   DIGITAL DENTAL ZONE — Premium Vector Icon System
+   Font Awesome 6 Free + Custom Glows, Gradients & Alignment
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Font Awesome Base Adjustments */
+i.fa-solid, i.fa-regular, i.fa-brands {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  line-height: 1;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), color 0.25s ease, filter 0.25s ease;
+}
+
+/* Button & Link Icons */
+.btn i, .btn-primary i, .btn-secondary i, .nav-cta i, .cta-wa i, .cta-call i, .btn-cta-wa i, .btn-cta-call i {
+  margin-right: 7px;
+  font-size: 1.05em;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
+}
+
+/* WhatsApp Icon Gradient & Glow */
+.fa-whatsapp, .cta-wa i, .btn-cta-wa i {
+  color: #25D366;
+  filter: drop-shadow(0 0 8px rgba(37, 211, 102, 0.45));
+}
+
+.btn-primary:hover .fa-whatsapp, .cta-wa:hover i, .btn-cta-wa:hover i {
+  transform: scale(1.15) rotate(-5deg);
+  filter: drop-shadow(0 0 12px rgba(37, 211, 102, 0.7));
+}
+
+/* Phone Icon Glow */
+.fa-phone, .fa-phone-volume, .cta-call i, .btn-cta-call i {
+  color: #38BDF8;
+  filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.4));
+}
+
+.cta-call:hover i, .btn-cta-call:hover i {
+  transform: scale(1.15) rotate(10deg);
+  filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.7));
+}
+
+/* Spec Icons (Duration, Anesthesia, Material) */
+.spec-icon i {
+  font-size: 1.1rem;
+  color: var(--primary, #E11D48);
+  filter: drop-shadow(0 0 6px rgba(225, 29, 72, 0.4));
+}
+
+.spec-icon i.fa-clock {
+  color: #38BDF8;
+  filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.4));
+}
+
+.spec-icon i.fa-stethoscope {
+  color: #4ADE80;
+  filter: drop-shadow(0 0 6px rgba(74, 222, 128, 0.4));
+}
+
+.spec-icon i.fa-gem {
+  color: #F59E0B;
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.45));
+}
+
+/* Symptom and Warning Bullets */
+.symptom-bullet i {
+  color: #F59E0B;
+  font-size: 0.95rem;
+  margin-right: 6px;
+  filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.4));
+}
+
+/* Aftercare and Protection Checks */
+.aftercare-check i {
+  color: #38BDF8;
+  font-size: 0.95rem;
+  margin-right: 6px;
+  filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.4));
+}
+
+/* Benefit Checks */
+.benefit-check i {
+  color: #4ADE80;
+  font-size: 0.95rem;
+  margin-right: 6px;
+  filter: drop-shadow(0 0 5px rgba(74, 222, 128, 0.4));
+}
+
+/* Gallery & Doctor Badges */
+.gallery-stat-icon i {
+  font-size: 1.6rem;
+  background: linear-gradient(135deg, #FB7185 0%, #E11D48 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 4px 10px rgba(225, 29, 72, 0.35));
+}
+
+.gallery-tab-icon i {
+  font-size: 1rem;
+  margin-right: 6px;
+  color: var(--primary, #E11D48);
+}
+
+.doc-video-badge i {
+  margin-right: 6px;
+  color: #E11D48;
+}
+
+/* Standard Feature Icons */
+.standard-icon i {
+  font-size: 1.8rem;
+  background: linear-gradient(135deg, #FB7185 0%, #E11D48 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 4px 12px rgba(225, 29, 72, 0.4));
+}
+
+/* FAQ Perks */
+.perk-icon i {
+  font-size: 1rem;
+  margin-right: 5px;
+  color: #F59E0B;
+}
+
+.clock-icon i {
+  font-size: 0.95rem;
+  margin-right: 5px;
+  color: #38BDF8;
+}
+
+/* Mobile Sticky Bar Icons */
+.mobile-cta-bar .cta-call i, .mobile-cta-bar .cta-wa i {
+  font-size: 1.25rem;
+  margin-right: 6px;
+}
+
+/* Review Stars */
+.review-stars i {
+  color: #F59E0B;
+  font-size: 0.9em;
+  margin-right: 2px;
+  filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.45));
+}
+

@@ -26,15 +26,16 @@
       singular: 'Blog Post',
       orderBy: { col: 'published_at', asc: false },
       title: (r) => r.title_en || r.title_bn || r.slug,
-      search: ['title_en', 'title_bn', 'slug'],
+      search: ['title_en', 'title_bn', 'slug', 'body_en', 'body_bn'],
       columns: [
         { key: 'title', label: 'Title' },
-        { key: 'language', label: 'Lang' },
+        { key: 'slug', label: 'Slug / URL' },
+        { key: 'language', label: 'Language', type: 'blog_lang' },
         { key: 'published_at', label: 'Published', type: 'date' }
       ],
       fields: [
-        { name: 'slug', label: 'Slug (URL)', type: 'text', required: true, hint: 'e.g. root-canal-or-extraction-en' },
-        { name: 'language', label: 'Language', type: 'select', options: [['en', 'English'], ['bn', 'Bengali']], required: true },
+        { name: 'slug', label: 'Slug (URL)', type: 'text', required: true, hint: 'e.g. root-canal-treatment-guide' },
+        { name: 'language', label: 'Language', type: 'select', options: [['both', 'Dual Language (English + বাংলা)'], ['en', 'English Only'], ['bn', 'বাংলা Only']], required: true },
         { name: 'title_en', label: 'Title (EN)', type: 'text' },
         { name: 'title_bn', label: 'Title (BN)', type: 'text' },
         { name: 'excerpt_en', label: 'Excerpt (EN)', type: 'textarea', rows: 2 },
@@ -152,15 +153,16 @@
       columns: [
         { key: 'title_en', label: 'Title' },
         { key: 'type', label: 'Type' },
+        { key: 'image_url', label: 'Preview', type: 'image_thumb' },
         { key: 'sort_order', label: 'Order' }
       ],
       fields: [
-        { name: 'title_en', label: 'Title (EN)', type: 'text' },
+        { name: 'title_en', label: 'Title (EN)', type: 'text', required: true },
         { name: 'title_bn', label: 'Title (BN)', type: 'text' },
-        { name: 'type', label: 'Type', type: 'select', options: [['before_after', 'Before / After'], ['general', 'General']], required: true },
-        { name: 'before_url', label: 'Before image URL', type: 'text' },
-        { name: 'after_url', label: 'After image URL', type: 'text' },
-        { name: 'image_url', label: 'Image URL (general)', type: 'text' },
+        { name: 'type', label: 'Type', type: 'select', options: [['before_after', 'Before / After Comparison'], ['general', 'General Clinic / Treatment Photo']], required: true },
+        { name: 'before_url', label: 'Before Image', type: 'image', hint: 'Upload (.jpg, .png) or paste URL for Before photo' },
+        { name: 'after_url', label: 'After Image', type: 'image', hint: 'Upload (.jpg, .png) or paste URL for After photo' },
+        { name: 'image_url', label: 'General Gallery Image', type: 'image', hint: 'Upload (.jpg, .png) or paste URL for general clinic/treatment photo' },
         { name: 'caption_en', label: 'Caption (EN)', type: 'textarea', rows: 2 },
         { name: 'caption_bn', label: 'Caption (BN)', type: 'textarea', rows: 2 },
         { name: 'sort_order', label: 'Sort order', type: 'number' }
@@ -315,20 +317,36 @@
   }
 
   function cellValue(col, row) {
+    if (col.key === 'title') {
+      const en = row.title_en ? esc(row.title_en) : '';
+      const bn = row.title_bn ? esc(row.title_bn) : '';
+      if (en && bn) {
+        return '<div style="font-weight:600; color:var(--a-text, #fff); max-width:320px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="' + en + '">' + en + '</div>' +
+               '<div style="font-size:12px; color:var(--a-muted, #94A3B8); max-width:320px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="' + bn + '">' + bn + '</div>';
+      }
+      const single = en || bn || row.title || row.slug || '—';
+      return '<div style="font-weight:600; color:var(--a-text, #fff); max-width:320px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="' + esc(single) + '">' + esc(single) + '</div>';
+    }
+    if (col.type === 'blog_lang' || (col.key === 'language' && (row.title_en || row.title_bn))) {
+      const l = String(row.language || 'both').toLowerCase();
+      if (l === 'en') return '<span class="badge" style="background:rgba(56,189,248,0.18); color:#38BDF8; border:1px solid rgba(56,189,248,0.4); padding:2px 8px; border-radius:12px; font-size:11px; font-weight:700;">English</span>';
+      if (l === 'bn') return '<span class="badge" style="background:rgba(74,222,128,0.18); color:#4ADE80; border:1px solid rgba(74,222,128,0.4); padding:2px 8px; border-radius:12px; font-size:11px; font-weight:700;">বাংলা</span>';
+      return '<span class="badge" style="background:rgba(225,29,72,0.18); color:#FB7185; border:1px solid rgba(225,29,72,0.4); padding:2px 8px; border-radius:12px; font-size:11px; font-weight:700;">Dual (EN+BN)</span>';
+    }
     if (col.type === 'category') return categoryName(row[col.key]);
     if (col.type === 'stars') {
       const r = Number(row[col.key]) || 0;
       return '&#9733;'.repeat(r) + '&#9734;'.repeat(Math.max(0, 5 - r));
     }
     if (col.type === 'image_thumb') {
-      const url = row[col.key];
+      const url = row[col.key] || row.image_url || row.after_url || row.before_url || row.cover_image;
       if (!url) return '—';
       return '<img class="table-img-thumb" src="' + esc(url) + '" alt="" onerror="this.style.display=\'none\'">';
     }
     if (col.type === 'date') return fmtDate(row[col.key]);
     const v = row[col.key];
     if (Array.isArray(v)) return v.join(', ');
-    return v;
+    return v == null ? '—' : esc(String(v));
   }
 
   async function fetchCategories() {
@@ -568,13 +586,15 @@
 
           // Attempt to upload to Supabase Storage if available
           try {
-            const fileName = 'review-' + Date.now() + '-' + file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+            const prefix = name === 'gallery' ? 'gallery-' : 'review-';
+            const fileName = prefix + Date.now() + '-' + file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+            const bucketName = name === 'gallery' ? 'gallery' : 'reviews';
             const { data: uploadData, error: uploadErr } = await client.storage
-              .from('reviews')
+              .from(bucketName)
               .upload(fileName, file, { cacheControl: '3600', upsert: true });
 
             if (!uploadErr && uploadData) {
-              const { data: publicUrlData } = client.storage.from('reviews').getPublicUrl(fileName);
+              const { data: publicUrlData } = client.storage.from(bucketName).getPublicUrl(fileName);
               if (publicUrlData && publicUrlData.publicUrl) {
                 input.value = publicUrlData.publicUrl;
                 prev.src = publicUrlData.publicUrl;
@@ -597,6 +617,26 @@
         });
       }
     });
+
+    // Dynamic field toggle for gallery (Before/After vs General)
+    if (name === 'gallery') {
+      const typeEl = $('#f-type');
+      const beforeWrap = $('#f-before_url') ? $('#f-before_url').closest('label.field') : null;
+      const afterWrap = $('#f-after_url') ? $('#f-after_url').closest('label.field') : null;
+      const genWrap = $('#f-image_url') ? $('#f-image_url').closest('label.field') : null;
+
+      function syncGalleryFieldVisibility() {
+        const isBa = !typeEl || typeEl.value === 'before_after';
+        if (beforeWrap) beforeWrap.style.display = isBa ? '' : 'none';
+        if (afterWrap) afterWrap.style.display = isBa ? '' : 'none';
+        if (genWrap) genWrap.style.display = isBa ? 'none' : '';
+      }
+
+      if (typeEl) {
+        typeEl.addEventListener('change', syncGalleryFieldVisibility);
+        syncGalleryFieldVisibility();
+      }
+    }
 
     $('#edit-form').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -836,6 +876,9 @@
       const file = logoFile.files && logoFile.files[0];
       if (!file) return;
 
+      const origPlaceholder = logoInput.placeholder;
+      logoInput.placeholder = 'Uploading logo to cloud storage...';
+
       try {
         const fileName = 'logo-' + Date.now() + '-' + file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
         const { data: uploadData, error: uploadErr } = await client.storage
@@ -847,6 +890,7 @@
           if (publicUrlData && publicUrlData.publicUrl) {
             logoInput.value = publicUrlData.publicUrl;
             updatePreviews(publicUrlData.publicUrl);
+            logoInput.placeholder = origPlaceholder;
             return;
           }
         }
@@ -857,6 +901,7 @@
       reader.onload = (ev) => {
         logoInput.value = ev.target.result;
         updatePreviews(ev.target.result);
+        logoInput.placeholder = origPlaceholder;
       };
       reader.readAsDataURL(file);
     });
@@ -891,11 +936,13 @@
       };
 
       try {
+        let saveRes;
         if (settings && settings.id) {
-          await client.from('clinic_settings').update(payload).eq('id', settings.id);
+          saveRes = await client.from('clinic_settings').update(payload).eq('id', settings.id);
         } else {
-          await client.from('clinic_settings').upsert({ id: 1, ...payload });
+          saveRes = await client.from('clinic_settings').upsert({ id: 1, ...payload });
         }
+        if (saveRes && saveRes.error) throw saveRes.error;
 
         // Cache locally for instant site-wide effect
         localStorage.setItem('ddz_site_settings', JSON.stringify(payload));

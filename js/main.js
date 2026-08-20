@@ -2024,7 +2024,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .from('clinic_settings')
         .select('*')
         .limit(1)
-        .single();
+        .maybeSingle();
       if (settings && settings.logo_url) {
         localStorage.setItem('ddz_clinic_logo', settings.logo_url);
         if (window.DDZ && window.DDZ.applySiteLogo) {

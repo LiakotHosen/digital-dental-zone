@@ -24,7 +24,14 @@ window.DDZ.applySiteLogo = function (logoUrl) {
   if (!logoUrl) return;
   const containers = document.querySelectorAll('#nav-logo-container, .nav-logo-icon');
   containers.forEach(container => {
-    container.innerHTML = '<img src="' + logoUrl + '" class="nav-logo-img" alt="Digital Dental Zone Logo">';
+    const existingImg = container.querySelector('img');
+    if (existingImg) {
+      if (existingImg.getAttribute('src') !== logoUrl) {
+        existingImg.src = logoUrl;
+      }
+    } else {
+      container.innerHTML = '<img src="' + logoUrl + '" class="nav-logo-img" alt="Digital Dental Zone Logo" onerror="this.src=\'/assets/ddz-logo.png\'">';
+    }
   });
 
   // Apply to favicon

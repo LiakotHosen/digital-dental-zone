@@ -310,7 +310,7 @@
     if (!filtered.length) {
       grid.innerHTML = `
         <div class="blog-empty-state">
-          <div class="empty-icon">🔍</div>
+          <div class="empty-icon"><i class="fa-solid fa-magnifying-glass" style="font-size:36px;color:var(--muted);"></i></div>
           <h3>${isBengali ? 'কোনো পোস্ট পাওয়া যায়নি' : 'No articles found'}</h3>
           <p>${isBengali ? 'অন্য কোনো কিওয়ার্ড বা ফিল্টার ব্যবহার করে পুনরায় চেষ্টা করুন।' : 'Try clearing your search or selecting another category filter.'}</p>
         </div>
@@ -339,11 +339,11 @@
         img.alt = title;
         img.loading = 'lazy';
         img.onerror = () => {
-          cover.innerHTML = `<div class="blog-cover-fallback">🦷 ${tag}</div>`;
+          cover.innerHTML = `<div class="blog-cover-fallback"><i class="fa-solid fa-tooth"></i> ${tag}</div>`;
         };
         cover.appendChild(img);
       } else {
-        cover.innerHTML = `<div class="blog-cover-fallback">🦷 ${tag}</div>`;
+        cover.innerHTML = `<div class="blog-cover-fallback"><i class="fa-solid fa-tooth"></i> ${tag}</div>`;
       }
 
       // Add Language indicator chip
@@ -449,7 +449,7 @@
     } else {
       container.innerHTML = `
         <div style="text-align:center;padding:60px 20px;color:var(--muted);">
-          <div style="font-size:36px;margin-bottom:12px;">🦷</div>
+          <div style="font-size:36px;margin-bottom:12px;color:var(--primary);"><i class="fa-solid fa-tooth"></i></div>
           <p>${isBengali ? 'পোস্ট লোড হচ্ছে...' : 'Loading dental article...'}</p>
         </div>
       `;
@@ -487,9 +487,9 @@
       </div>
       <h1 class="blog-post-title">${title}</h1>
       <div class="blog-post-meta">
-        <span>👨‍⚕️ ${post.author || (isBengali ? 'ডাঃ নুসরাত নাঈম' : 'Dr. Nusrat Naiem')}</span>
+        <span><i class="fa-solid fa-user-doctor"></i> ${post.author || (isBengali ? 'ডাঃ নুসরাত নাঈম' : 'Dr. Nusrat Naiem')}</span>
         <span>·</span>
-        <span>📍 ${isBengali ? 'ডিজিটাল ডেন্টাল জোন, বরিশাল' : 'Digital Dental Zone, Barishal'}</span>
+        <span><i class="fa-solid fa-location-dot"></i> ${isBengali ? 'ডিজিটাল ডেন্টাল জোন, বরিশাল' : 'Digital Dental Zone, Barishal'}</span>
       </div>
     `;
 
@@ -499,7 +499,7 @@
       const coverSrc = post.cover.startsWith('/') ? post.cover : '/' + post.cover;
       cover.innerHTML = `<img src="${coverSrc}" alt="${title}">`;
     } else {
-      cover.innerHTML = `<div class="blog-cover-fallback">🦷 ${title}</div>`;
+      cover.innerHTML = `<div class="blog-cover-fallback"><i class="fa-solid fa-tooth"></i> ${title}</div>`;
     }
 
     const content = document.createElement('div');
@@ -520,10 +520,10 @@
       </p>
       <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
         <a href="${cfg.whatsapp || 'https://wa.me/8801674878470'}" target="_blank" class="btn-primary">
-          ${isBn() ? '💬 হোয়াটসঅ্যাপে পরামর্শ নিন' : '💬 WhatsApp Now'}
+          ${isBn() ? '<i class="fa-brands fa-whatsapp"></i> হোয়াটসঅ্যাপে পরামর্শ নিন' : '<i class="fa-brands fa-whatsapp"></i> WhatsApp Now'}
         </a>
         <a href="tel:01674878470" class="btn-secondary">
-          📞 01674-878470
+          <i class="fa-solid fa-phone"></i> 01674-878470
         </a>
       </div>
     `;
@@ -542,7 +542,7 @@
 
     container.innerHTML = `
       <div class="blog-not-found" style="text-align:center;padding:60px 20px;max-width:700px;margin:0 auto;">
-        <div style="font-size:48px;margin-bottom:16px;">🔍</div>
+        <div style="font-size:48px;margin-bottom:16px;color:var(--muted);"><i class="fa-solid fa-magnifying-glass"></i></div>
         <h2 style="font-size:28px;margin-bottom:12px;">${isBengali ? 'পোস্টটি পাওয়া যায়নি' : 'Post Not Found'}</h2>
         <p style="color:var(--muted);margin-bottom:24px;">
           ${isBengali ? 'আপনি যে পোস্টটি খুঁজছেন তা সরানো হয়েছে অথবা লিংকটি পরিবর্তিত হয়েছে। নিচের অন্যান্য দরকারি পোস্টগুলো পড়তে পারেন:' : 'The article you are looking for might have been moved or renamed. Explore our latest guides below:'}
@@ -551,7 +551,7 @@
           ${popular.map(p => `
             <a href="/blog/${encodeURIComponent(p.slug)}" class="card hover-lift" style="display:block;padding:16px 20px;text-decoration:none;border-radius:12px;background:var(--card-bg, rgba(255,255,255,0.04));border:1px solid var(--border-color, rgba(255,255,255,0.08));">
               <strong style="color:var(--text, #fff);display:block;font-size:16px;margin-bottom:4px;">${pick(p, 'title') || p.title_bn || p.title_en}</strong>
-              <span style="color:var(--muted, #999);font-size:13px;">${fmtDate(p.published)} · 🦷 ${isBengali ? 'পড়ুন →' : 'Read article →'}</span>
+              <span style="color:var(--muted, #999);font-size:13px;">${fmtDate(p.published)} · <i class="fa-solid fa-newspaper"></i> ${isBengali ? 'পড়ুন →' : 'Read article →'}</span>
             </a>
           `).join('')}
         </div>

@@ -96,6 +96,8 @@ http.createServer((req, res) => {
 }).listen(PORT, () => {
   console.log('Digital Dental Zone dev server:');
   console.log('  http://127.0.0.1:' + PORT + '/');
+  console.log('  http://127.0.0.1:' + PORT + '/services');
+  console.log('  http://127.0.0.1:' + PORT + '/gallery');
   console.log('  http://127.0.0.1:' + PORT + '/doctor');
   console.log('  http://127.0.0.1:' + PORT + '/blog/');
   console.log('  http://127.0.0.1:' + PORT + '/admin/');

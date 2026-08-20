@@ -14,6 +14,7 @@
 
   <link rel="stylesheet" href="/css/style.css?v=1.1">
   <link rel="icon" type="image/svg+xml" id="favicon-link" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23C4485E'><path d='M9.5 2C7.6 2 6 3.4 6 5.2c0 .8.2 1.6.6 2.4L7.9 16c.2.9.9 1.5 1.7 1.5s1.5-.6 1.7-1.5L12 12l.7 4c.2.9.9 1.5 1.7 1.5s1.5-.6 1.7-1.5l1.3-8.4c.4-.8.6-1.6.6-2.4C18 3.4 16.4 2 14.5 2c-.9 0-1.6.3-2.1.7-.2.1-.3.2-.4.3-.1-.1-.2-.2-.4-.3C11.1 2.3 10.4 2 9.5 2z'/></svg>">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body data-blog-page="post">
 
@@ -37,10 +38,8 @@
 <nav id="navbar">
   <a href="/" class="nav-logo" aria-label="Digital Dental Zone — Home">
     <div class="nav-logo-icon" id="nav-logo-container">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M9.5 2C7.6 2 6 3.4 6 5.2c0 .8.2 1.6.6 2.4L7.9 16c.2.9.9 1.5 1.7 1.5s1.5-.6 1.7-1.5L12 12l.7 4c.2.9.9 1.5 1.7 1.5s1.5-.6 1.7-1.5l1.3-8.4c.4-.8.6-1.6.6-2.4C18 3.4 16.4 2 14.5 2c-.9 0-1.6.3-2.1.7-.2.1-.3.2-.4.3-.1-.1-.2-.2-.4-.3C11.1 2.3 10.4 2 9.5 2z"/>
-      </svg>
-    </div>
+        <img src="/assets/ddz-logo.png" class="nav-logo-img" alt="Digital Dental Zone Logo" onerror="this.style.display='none'">
+      </div>
     <span class="nav-logo-name">
       <span data-lang-en>Digital Dental Zone</span>
       <span data-lang-bn>ডিজিটাল ডেন্টাল জোন</span>
@@ -51,7 +50,7 @@
     <li><a href="/#about" data-lang-en>About</a><a href="/#about" data-lang-bn>পরিচিতি</a></li>
     <li><a href="/services" data-lang-en>Services</a><a href="/services" data-lang-bn>সেবাসমূহ</a></li>
     <li><a href="/#calculator" data-lang-en>Cost Calculator</a><a href="/#calculator" data-lang-bn>খরচ হিসাব</a></li>
-    <li><a href="/#gallery" data-lang-en>Gallery</a><a href="/#gallery" data-lang-bn>গ্যালারি</a></li>
+    <li><a href="/gallery" data-lang-en>Gallery</a><a href="/gallery" data-lang-bn>গ্যালারি</a></li>
     <li><a href="/#why" data-lang-en>Why Us</a><a href="/#why" data-lang-bn>কেন আমরা</a></li>
     <li><a href="/doctor" data-lang-en>Doctor Profile</a><a href="/doctor" data-lang-bn>ডাক্তার পরিচিতি</a></li>
     <li><a href="/blog/" class="active" data-lang-en>Blog</a><a href="/blog/" class="active" data-lang-bn>ব্লগ</a></li>
@@ -59,12 +58,12 @@
     <li class="nav-drawer-cta-wrap">
       <div class="nav-drawer-footer">
         <a href="https://wa.me/8801674878470" target="_blank" class="btn-primary">
-          <span data-lang-en>💬 Book Appointment</span>
-          <span data-lang-bn>💬 অ্যাপয়েন্টমেন্ট বুক করুন</span>
+          <span data-lang-en><i class="fa-brands fa-whatsapp"></i> Book Appointment</span>
+          <span data-lang-bn><i class="fa-brands fa-whatsapp"></i> অ্যাপয়েন্টমেন্ট বুক করুন</span>
         </a>
         <a href="tel:01674878470" class="btn-secondary">
-          <span data-lang-en>📞 Call 01674-878470</span>
-          <span data-lang-bn>📞 কল করুন 01674-878470</span>
+          <span data-lang-en><i class="fa-solid fa-phone"></i> Call 01674-878470</span>
+          <span data-lang-bn><i class="fa-solid fa-phone"></i> কল করুন 01674-878470</span>
         </a>
       </div>
     </li>
@@ -107,7 +106,7 @@
       </h4>
       <ul>
         <li><a href="/"><span data-lang-en>Home</span><span data-lang-bn>হোম</span></a></li>
-        <li><a href="/#services"><span data-lang-en>Services</span><span data-lang-bn>সেবাসমূহ</span></a></li>
+        <li><a href="/services"><span data-lang-en>Services</span><span data-lang-bn>সেবাসমূহ</span></a></li>
         <li><a href="/#calculator"><span data-lang-en>Cost Calculator</span><span data-lang-bn>খরচ হিসাব</span></a></li>
         <li><a href="/doctor"><span data-lang-en>About the Doctor</span><span data-lang-bn>চিকিৎসক সম্পর্কে</span></a></li>
         <li><a href="/blog/"><span data-lang-en>All Blog Posts</span><span data-lang-bn>সব ব্লগ পোস্ট</span></a></li>
@@ -134,11 +133,11 @@
 </footer>
 
 <div class="mobile-cta-bar">
-  <a href="tel:01674878470" class="cta-call" id="mobile-call-btn">📞
+  <a href="tel:01674878470" class="cta-call" id="mobile-call-btn"><i class="fa-solid fa-phone"></i>
     <span data-lang-en>Call Now</span>
     <span data-lang-bn>কল করুন</span>
   </a>
-  <a href="https://wa.me/8801674878470" target="_blank" class="cta-wa" id="mobile-wa-btn">💬
+  <a href="https://wa.me/8801674878470" target="_blank" class="cta-wa" id="mobile-wa-btn"><i class="fa-brands fa-whatsapp"></i>
     <span data-lang-en>WhatsApp</span>
     <span data-lang-bn>হোয়াটসঅ্যাপ</span>
   </a>
