@@ -34,12 +34,14 @@ window.DDZ.applySiteLogo = function (logoUrl) {
     }
   });
 
-  // Apply to favicon
-  let favicon = document.getElementById('favicon-link');
-  if (favicon) {
-    favicon.href = logoUrl;
+  // Apply to all favicon and touch icon links
+  const favicons = document.querySelectorAll('link[rel*="icon"], link[rel="apple-touch-icon"]');
+  if (favicons.length > 0) {
+    favicons.forEach(fav => {
+      fav.href = logoUrl;
+    });
   } else {
-    favicon = document.createElement('link');
+    const favicon = document.createElement('link');
     favicon.id = 'favicon-link';
     favicon.rel = 'icon';
     favicon.href = logoUrl;

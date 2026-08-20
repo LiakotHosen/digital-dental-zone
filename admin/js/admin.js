@@ -773,7 +773,7 @@
   async function renderSettings(container) {
     let settings = null;
     try {
-      const { data, error } = await client.from('clinic_settings').select('*').limit(1).single();
+      const { data, error } = await client.from('clinic_settings').select('*').limit(1).maybeSingle();
       if (!error && data) settings = data;
     } catch (e) {}
 
@@ -877,33 +877,87 @@
       if (!file) return;
 
       const origPlaceholder = logoInput.placeholder;
-      logoInput.placeholder = 'Uploading logo to cloud storage...';
+      logoInput.placeholder = 'Optimizing and uploading logo...';
+      const saveBtn = $('#save-settings-btn');
+      if (saveBtn) saveBtn.disabled = true;
 
       try {
-        const fileName = 'logo-' + Date.now() + '-' + file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-        const { data: uploadData, error: uploadErr } = await client.storage
-          .from('reviews')
-          .upload(fileName, file, { cacheControl: '3600', upsert: true });
+        // 1. Client-side canvas optimization: resize to max 400x400 to ensure fast loading and zero payload size issues
+        const optimized = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+              const maxDim = 400;
+              let w = img.width;
+              let h = img.height;
+              if (w > maxDim || h > maxDim) {
+                if (w > h) {
+                  h = Math.round((h * maxDim) / w);
+                  w = maxDim;
+                } else {
+                  w = Math.round((w * maxDim) / h);
+                  h = maxDim;
+                }
+              }
+              const canvas = document.createElement('canvas');
+              canvas.width = w;
+              canvas.height = h;
+              const ctx = canvas.getContext('2d');
+              ctx.imageSmoothingEnabled = true;
+              ctx.imageSmoothingQuality = 'high';
+              ctx.drawImage(img, 0, 0, w, h);
+              const isPng = file.type.includes('png') || file.name.toLowerCase().endsWith('.png');
+              const mime = isPng ? 'image/png' : 'image/jpeg';
+              const dataUrl = canvas.toDataURL(mime, 0.92);
+              canvas.toBlob((blob) => {
+                resolve({ blob: blob || file, dataUrl });
+              }, mime, 0.92);
+            };
+            img.onerror = () => resolve({ blob: file, dataUrl: e.target.result });
+            img.src = e.target.result;
+          };
+          reader.onerror = () => resolve(null);
+          reader.readAsDataURL(file);
+        });
 
-        if (!uploadErr && uploadData) {
-          const { data: publicUrlData } = client.storage.from('reviews').getPublicUrl(fileName);
-          if (publicUrlData && publicUrlData.publicUrl) {
-            logoInput.value = publicUrlData.publicUrl;
-            updatePreviews(publicUrlData.publicUrl);
-            logoInput.placeholder = origPlaceholder;
-            return;
-          }
+        if (!optimized) throw new Error('Could not read image file.');
+
+        // Live preview immediately
+        updatePreviews(optimized.dataUrl);
+
+        // 2. Upload to Supabase Storage
+        const isPng = file.type.includes('png') || file.name.toLowerCase().endsWith('.png');
+        const ext = isPng ? '.png' : '.jpg';
+        const fileName = 'logo-' + Date.now() + ext;
+
+        let publicUrl = null;
+        for (const bucket of ['reviews', 'gallery', 'public']) {
+          try {
+            const { data: uploadData, error: uploadErr } = await client.storage
+              .from(bucket)
+              .upload(fileName, optimized.blob, { cacheControl: '3600', upsert: true });
+
+            if (!uploadErr && uploadData) {
+              const { data: publicUrlData } = client.storage.from(bucket).getPublicUrl(fileName);
+              if (publicUrlData && publicUrlData.publicUrl) {
+                publicUrl = publicUrlData.publicUrl;
+                break;
+              }
+            }
+          } catch (bErr) {}
         }
-      } catch (e) {}
 
-      // Fallback Data URL
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        logoInput.value = ev.target.result;
-        updatePreviews(ev.target.result);
+        // If cloud bucket is accessible use public URL; otherwise use compressed DataURL
+        const finalUrl = publicUrl || optimized.dataUrl;
+        logoInput.value = finalUrl;
+        updatePreviews(finalUrl);
+      } catch (err) {
+        console.error('Logo upload error:', err);
+      } finally {
         logoInput.placeholder = origPlaceholder;
-      };
-      reader.readAsDataURL(file);
+        if (saveBtn) saveBtn.disabled = false;
+      }
     });
 
     $('#settings-form').addEventListener('submit', async (e) => {
