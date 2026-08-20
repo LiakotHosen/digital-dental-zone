@@ -33,12 +33,13 @@ CREATE TABLE IF NOT EXISTS public.blog_posts (
 ALTER TABLE public.blog_posts DROP CONSTRAINT IF EXISTS blog_posts_language_check;
 ALTER TABLE public.blog_posts ADD CONSTRAINT blog_posts_language_check CHECK (language IN ('en', 'bn', 'both'));
 
--- Ensure RLS is enabled and publicly readable
+-- Ensure RLS is enabled and allows full admin CRUD & public read
 ALTER TABLE public.blog_posts ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "blog_posts are public readable" ON public.blog_posts;
-CREATE POLICY "blog_posts are public readable"
-  ON public.blog_posts FOR SELECT TO anon, authenticated USING (true);
+DROP POLICY IF EXISTS "allow full access on blog_posts" ON public.blog_posts;
+CREATE POLICY "allow full access on blog_posts"
+  ON public.blog_posts FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
 
 -- 2. Clear Existing Records
 DELETE FROM public.blog_posts;

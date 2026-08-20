@@ -123,6 +123,15 @@
     return post[field + '_bn'] || post[field + '_en'] || '';
   }
 
+  function formatImageUrl(url) {
+    if (!url) return '';
+    const trimmed = String(url).trim();
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('data:') || trimmed.startsWith('blob:')) {
+      return trimmed;
+    }
+    return trimmed.startsWith('/') ? trimmed : '/' + trimmed;
+  }
+
   function fmtDate(iso) {
     if (!iso) return '';
     try {
@@ -335,7 +344,7 @@
       cover.className = 'blog-card-cover';
       if (post.cover) {
         const img = document.createElement('img');
-        img.src = post.cover.startsWith('/') ? post.cover : '/' + post.cover;
+        img.src = formatImageUrl(post.cover);
         img.alt = title;
         img.loading = 'lazy';
         img.onerror = () => {
@@ -496,7 +505,7 @@
     const cover = document.createElement('div');
     cover.className = 'blog-post-cover';
     if (post.cover) {
-      const coverSrc = post.cover.startsWith('/') ? post.cover : '/' + post.cover;
+      const coverSrc = formatImageUrl(post.cover);
       cover.innerHTML = `<img src="${coverSrc}" alt="${title}">`;
     } else {
       cover.innerHTML = `<div class="blog-cover-fallback"><i class="fa-solid fa-tooth"></i> ${title}</div>`;

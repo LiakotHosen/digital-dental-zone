@@ -171,7 +171,24 @@
     }
   };
 
-  const LEADS_SEARCH = ['name', 'phone', 'source'];
+  /* ──────────────────────────  TOAST NOTIFICATIONS  ────────────────────────── */
+
+  let toastTimeout = null;
+  function showToast(message, type = 'success') {
+    let toast = document.getElementById('admin-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'admin-toast';
+      toast.className = 'admin-toast';
+      document.body.appendChild(toast);
+    }
+    toast.className = 'admin-toast' + (type === 'error' ? ' error' : '') + ' show';
+    toast.innerHTML = (type === 'error' ? '<i class="fa-solid fa-triangle-exclamation"></i> ' : '<i class="fa-solid fa-circle-check"></i> ') + esc(message);
+    if (toastTimeout) clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => {
+      toast.classList.remove('show');
+    }, 4000);
+  }
 
   /* ──────────────────────────  AUTH  ────────────────────────── */
 
@@ -710,10 +727,12 @@
           ({ error } = await client.from(cfg.table).update(payload).eq('id', id));
         }
         if (error) throw error;
+        showToast(cfg.singular + (id == null ? ' created successfully!' : ' updated successfully!'));
         renderRoute();
       } catch (ex) {
         err.textContent = ex && ex.message ? ex.message : 'Save failed.';
         err.classList.remove('hidden');
+        showToast('Failed to save ' + cfg.singular.toLowerCase() + ': ' + (ex && ex.message ? ex.message : 'Unknown error'), 'error');
         save.disabled = false;
         save.textContent = 'Save ' + cfg.singular;
       }
@@ -738,8 +757,10 @@
     try {
       const { error } = await client.from(cfg.table).delete().eq('id', id);
       if (error) throw error;
+      showToast(cfg.singular + ' deleted successfully.');
       renderRoute();
     } catch (ex) {
+      showToast('Delete failed: ' + (ex && ex.message), 'error');
       alert('Delete failed: ' + (ex && ex.message));
     }
   }
@@ -1065,10 +1086,12 @@
         msgEl.className = 'alert-success';
         msgEl.textContent = '✓ Clinic settings and logo updated successfully! Changes are live across the site.';
         msgEl.classList.remove('hidden');
+        showToast('✓ Clinic settings and logo saved successfully!');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } catch (ex) {
         errEl.textContent = 'Could not save to database: ' + (ex && ex.message ? ex.message : 'Unknown error');
         errEl.classList.remove('hidden');
+        showToast('Could not save settings: ' + (ex && ex.message ? ex.message : 'Unknown error'), 'error');
       } finally {
         saveBtn.disabled = false;
         saveBtn.textContent = 'Save Settings & Logo';
