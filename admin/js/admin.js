@@ -28,6 +28,7 @@
       title: (r) => r.title_en || r.title_bn || r.slug,
       search: ['title_en', 'title_bn', 'slug', 'body_en', 'body_bn'],
       columns: [
+        { key: 'cover_image', label: 'Cover', type: 'image_thumb' },
         { key: 'title', label: 'Title' },
         { key: 'slug', label: 'Slug / URL' },
         { key: 'language', label: 'Language', type: 'blog_lang' },
@@ -38,12 +39,12 @@
         { name: 'language', label: 'Language', type: 'select', options: [['both', 'Dual Language (English + বাংলা)'], ['en', 'English Only'], ['bn', 'বাংলা Only']], required: true },
         { name: 'title_en', label: 'Title (EN)', type: 'text' },
         { name: 'title_bn', label: 'Title (BN)', type: 'text' },
+        { name: 'cover_image', label: 'Cover image', type: 'image', hint: 'Upload image (.png, .jpg, .webp) from device or paste URL' },
         { name: 'excerpt_en', label: 'Excerpt (EN)', type: 'textarea', rows: 2 },
         { name: 'excerpt_bn', label: 'Excerpt (BN)', type: 'textarea', rows: 2 },
-        { name: 'body_en', label: 'Body (EN) — markdown', type: 'textarea', rows: 12 },
-        { name: 'body_bn', label: 'Body (BN) — markdown', type: 'textarea', rows: 12 },
+        { name: 'body_en', label: 'Body (EN) — markdown / HTML', type: 'textarea', rows: 12 },
+        { name: 'body_bn', label: 'Body (BN) — markdown / HTML', type: 'textarea', rows: 12 },
         { name: 'tags', label: 'Tags (comma separated)', type: 'tags' },
-        { name: 'cover_image', label: 'Cover image URL', type: 'text' },
         { name: 'author', label: 'Author', type: 'text' },
         { name: 'meta_title', label: 'Meta title', type: 'text' },
         { name: 'meta_description', label: 'Meta description', type: 'textarea', rows: 2 },
@@ -118,7 +119,7 @@
         { name: 'negotiable', label: 'Negotiable', type: 'checkbox' },
         { name: 'notes_en', label: 'Notes (EN)', type: 'text' },
         { name: 'notes_bn', label: 'Notes (BN)', type: 'text' },
-        { name: 'image_url', label: 'Image URL', type: 'text' },
+        { name: 'image_url', label: 'Treatment Image', type: 'image', hint: 'Upload image (.png, .jpg) or paste URL' },
         { name: 'sort_order', label: 'Sort order', type: 'number' }
       ]
     },
@@ -584,36 +585,90 @@
           const file = fileInput.files && fileInput.files[0];
           if (!file) return;
 
-          // Attempt to upload to Supabase Storage if available
+          const origPlaceholder = input.placeholder;
+          input.placeholder = 'Optimizing and uploading image...';
+          const saveBtn = $('#save-btn');
+          if (saveBtn) saveBtn.disabled = true;
+
           try {
-            const prefix = name === 'gallery' ? 'gallery-' : 'review-';
-            const fileName = prefix + Date.now() + '-' + file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-            const bucketName = name === 'gallery' ? 'gallery' : 'reviews';
-            const { data: uploadData, error: uploadErr } = await client.storage
-              .from(bucketName)
-              .upload(fileName, file, { cacheControl: '3600', upsert: true });
+            // 1. Client-side canvas image optimization: resize large images to max 1200px width/height
+            const optimized = await new Promise((resolve) => {
+              const reader = new FileReader();
+              reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                  const maxDim = 1200;
+                  let w = img.width;
+                  let h = img.height;
+                  if (w > maxDim || h > maxDim) {
+                    if (w > h) {
+                      h = Math.round((h * maxDim) / w);
+                      w = maxDim;
+                    } else {
+                      w = Math.round((w * maxDim) / h);
+                      h = maxDim;
+                    }
+                  }
+                  const canvas = document.createElement('canvas');
+                  canvas.width = w;
+                  canvas.height = h;
+                  const ctx = canvas.getContext('2d');
+                  ctx.imageSmoothingEnabled = true;
+                  ctx.imageSmoothingQuality = 'high';
+                  ctx.drawImage(img, 0, 0, w, h);
+                  const isPng = file.type.includes('png') || file.name.toLowerCase().endsWith('.png');
+                  const mime = isPng ? 'image/png' : 'image/jpeg';
+                  const dataUrl = canvas.toDataURL(mime, 0.90);
+                  canvas.toBlob((blob) => {
+                    resolve({ blob: blob || file, dataUrl });
+                  }, mime, 0.90);
+                };
+                img.onerror = () => resolve({ blob: file, dataUrl: e.target.result });
+                img.src = e.target.result;
+              };
+              reader.onerror = () => resolve(null);
+              reader.readAsDataURL(file);
+            });
 
-            if (!uploadErr && uploadData) {
-              const { data: publicUrlData } = client.storage.from(bucketName).getPublicUrl(fileName);
-              if (publicUrlData && publicUrlData.publicUrl) {
-                input.value = publicUrlData.publicUrl;
-                prev.src = publicUrlData.publicUrl;
-                prev.classList.add('has-image');
-                return;
-              }
-            }
-          } catch (e) {
-            // Storage bucket not configured or fallback to DataURL
-          }
+            if (!optimized) throw new Error('Could not read image file.');
 
-          // Fallback to local Data URL reader
-          const reader = new FileReader();
-          reader.onload = (ev) => {
-            input.value = ev.target.result;
-            prev.src = ev.target.result;
+            // Update preview immediately
+            prev.src = optimized.dataUrl;
             prev.classList.add('has-image');
-          };
-          reader.readAsDataURL(file);
+
+            // 2. Upload to Supabase Storage
+            const prefix = name === 'blog' ? 'blog-' : (name === 'gallery' ? 'gallery-' : (name === 'treatments' ? 'treatment-' : 'review-'));
+            const isPng = file.type.includes('png') || file.name.toLowerCase().endsWith('.png');
+            const ext = isPng ? '.png' : '.jpg';
+            const fileName = prefix + Date.now() + ext;
+
+            let publicUrl = null;
+            for (const bucket of ['reviews', 'gallery', 'public']) {
+              try {
+                const { data: uploadData, error: uploadErr } = await client.storage
+                  .from(bucket)
+                  .upload(fileName, optimized.blob, { cacheControl: '3600', upsert: true });
+
+                if (!uploadErr && uploadData) {
+                  const { data: publicUrlData } = client.storage.from(bucket).getPublicUrl(fileName);
+                  if (publicUrlData && publicUrlData.publicUrl) {
+                    publicUrl = publicUrlData.publicUrl;
+                    break;
+                  }
+                }
+              } catch (bErr) {}
+            }
+
+            const finalUrl = publicUrl || optimized.dataUrl;
+            input.value = finalUrl;
+            prev.src = finalUrl;
+            prev.classList.add('has-image');
+          } catch (err) {
+            console.error('Image upload error:', err);
+          } finally {
+            input.placeholder = origPlaceholder;
+            if (saveBtn) saveBtn.disabled = false;
+          }
         });
       }
     });
