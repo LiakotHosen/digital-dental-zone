@@ -149,12 +149,25 @@
 
     <ul class="nav-links" id="nav-links">
       <li><a href="#about" data-lang-en>About</a><a href="#about" data-lang-bn>পরিচিতি</a></li>
-      <li><a href="#services" data-lang-en>Services</a><a href="#services" data-lang-bn>সেবাসমূহ</a></li>
+      <li><a href="/services" data-lang-en>Services</a><a href="/services" data-lang-bn>সেবাসমূহ</a></li>
       <li><a href="#calculator" data-lang-en>Cost Calculator</a><a href="#calculator" data-lang-bn>খরচ হিসাব</a></li>
       <li><a href="#gallery" data-lang-en>Gallery</a><a href="#gallery" data-lang-bn>গ্যালারি</a></li>
       <li><a href="#why" data-lang-en>Why Us</a><a href="#why" data-lang-bn>কেন আমরা</a></li>
+      <li><a href="/doctor" data-lang-en>Doctor Profile</a><a href="/doctor" data-lang-bn>ডাক্তার পরিচিতি</a></li>
       <li><a href="/blog/" data-lang-en>Blog</a><a href="/blog/" data-lang-bn>ব্লগ</a></li>
       <li><a href="#contact" data-lang-en>Contact</a><a href="#contact" data-lang-bn>যোগাযোগ</a></li>
+      <li class="nav-drawer-cta-wrap">
+        <div class="nav-drawer-footer">
+          <a href="https://wa.me/8801674878470" target="_blank" class="btn-primary">
+            <span data-lang-en>💬 Book Appointment</span>
+            <span data-lang-bn>💬 অ্যাপয়েন্টমেন্ট বুক করুন</span>
+          </a>
+          <a href="tel:01674878470" class="btn-secondary">
+            <span data-lang-en>📞 Call 01674-878470</span>
+            <span data-lang-bn>📞 কল করুন 01674-878470</span>
+          </a>
+        </div>
+      </li>
     </ul>
 
     <div class="nav-right">
@@ -166,7 +179,11 @@
         <span data-lang-en>Book Appointment</span>
         <span data-lang-bn>অ্যাপয়েন্টমেন্ট</span>
       </a>
-      <button class="nav-toggle" id="nav-toggle" aria-label="Menu">☰</button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle Navigation Menu" aria-expanded="false">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
     </div>
   </nav>
 
@@ -185,9 +202,17 @@
           </div>
         </div>
         <div class="hero-animate">
-          <h1 class="hero-h1">
-            <span data-lang-en>YOUR SMILE<br>DESERVES<br><em>Expert Care.</em></span>
-            <span data-lang-bn>আপনার সুন্দর হাসির জন্য<br>প্রয়োজন<br><em>বিশেষজ্ঞের যত্ন।</em></span>
+          <h1 class="hero-h1 hero-title-animated">
+            <span data-lang-en>
+              <span class="hero-title-line line-1">YOUR SMILE</span>
+              <span class="hero-title-line line-2">DESERVES</span>
+              <span class="hero-title-line line-3"><em>Expert Care.</em></span>
+            </span>
+            <span data-lang-bn>
+              <span class="hero-title-line line-1">আপনার সুন্দর হাসির জন্য</span>
+              <span class="hero-title-line line-2">প্রয়োজন</span>
+              <span class="hero-title-line line-3"><em>বিশেষজ্ঞের যত্ন।</em></span>
+            </span>
           </h1>
         </div>
         <div class="hero-animate">
@@ -538,6 +563,13 @@
           <img id="modalTreatmentImg" src="assets/images/service-root-canal.jpg" alt="Treatment Image" loading="lazy">
           <div class="treatment-modal-badge" id="modalCategoryBadge">Root Canal</div>
           <div class="treatment-modal-price-pill" id="modalPricePill">Est. ৳8,000</div>
+          <a href="/services" class="treatment-modal-learn-more-btn" id="modalLearnMoreBtn">
+            <span data-lang-en>Learn More</span>
+            <span data-lang-bn>বিস্তারিত জানুন</span>
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
         </div>
 
         <!-- Content Side -->
@@ -736,12 +768,8 @@
       </h2>
 
       <div class="why-grid" style="margin-top:40px;">
-        <!-- ROADMAP TIMELINE -->
+        <!-- ROADMAP TIMELINE / WHY CHOOSE US CARDS -->
         <div class="why-roadmap stagger">
-          <div class="roadmap-spine">
-            <div class="roadmap-spine-progress" id="roadmapProgress"></div>
-          </div>
-
           <!-- Step 1 -->
           <div class="roadmap-item active" data-step="1">
             <div class="roadmap-node">
@@ -819,152 +847,6 @@
                 morning and evening chambers and full sterilization protocol.</p>
               <p data-lang-bn>বরিশাল শহরের ১৫ পরারা রোডের প্রাণকেন্দ্রে — শনি থেকে শুক্রবার সকাল ও সন্ধ্যায় নিয়মিত
                 চেম্বার এবং শতভাগ অটোক্লেভ জীবাণুমুক্ত পরিবেশ।</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- 3D DENTAL SCANNER & ROOT CANAL INTERACTIVE VISUAL -->
-        <div class="why-3d-visual reveal-right">
-          <div class="dental-3d-card" id="dental3dCard">
-            <div class="dental-3d-header">
-              <div class="dental-hud-status">
-                <span class="hud-pulse-dot"></span>
-                <span class="hud-status-text" id="hudStatusText">3D INTRAORAL SCAN · ACTIVE</span>
-              </div>
-              <div class="dental-hud-badge">DDZ · DIGITAL CAD/CAM</div>
-            </div>
-
-            <!-- 3D Holographic Stage -->
-            <div class="dental-hologram-stage" id="dentalHologramStage">
-              <div class="holo-grid-plane"></div>
-              <div class="holo-laser-sweep"></div>
-
-              <!-- Floating 3D Tooth Model Container -->
-              <div class="holo-tooth-3d" id="holoTooth">
-                <!-- SVG Anatomy / Root Canal / Laser Mesh Layer -->
-                <svg class="holo-tooth-svg" viewBox="0 0 280 320" xmlns="http://www.w3.org/2000/svg">
-                  <defs>
-                    <linearGradient id="enamelGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95" />
-                      <stop offset="60%" stop-color="#e8d5db" stop-opacity="0.8" />
-                      <stop offset="100%" stop-color="#c4485e" stop-opacity="0.35" />
-                    </linearGradient>
-                    <linearGradient id="dentinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stop-color="#ffd599" stop-opacity="0.8" />
-                      <stop offset="100%" stop-color="#e8849a" stop-opacity="0.6" />
-                    </linearGradient>
-                    <linearGradient id="pulpGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stop-color="#ff3366" />
-                      <stop offset="50%" stop-color="#c4485e" />
-                      <stop offset="100%" stop-color="#700d22" />
-                    </linearGradient>
-                    <linearGradient id="implantGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stop-color="#64748b" />
-                      <stop offset="50%" stop-color="#cbd5e1" />
-                      <stop offset="100%" stop-color="#475569" />
-                    </linearGradient>
-                    <filter id="laserGlow" x="-20%" y="-20%" width="140%" height="140%">
-                      <feGaussianBlur stdDeviation="4" result="blur" />
-                      <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                    </filter>
-                    <filter id="pulpGlow" x="-30%" y="-30%" width="160%" height="160%">
-                      <feGaussianBlur stdDeviation="6" result="blur" />
-                      <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                    </filter>
-                  </defs>
-
-                  <!-- Background Glow Silhouette -->
-                  <path class="tooth-halo"
-                    d="M140 28 C95 28 62 48 56 95 C50 142 75 195 90 270 C105 285 125 282 135 240 C140 220 145 220 150 240 C160 282 180 285 195 270 C210 195 235 142 229 95 C223 48 190 28 140 28 Z"
-                    fill="url(#pulpGrad)" opacity="0.15" filter="url(#pulpGlow)" />
-
-                  <!-- Tooth Outer Enamel Layer -->
-                  <path class="tooth-enamel"
-                    d="M140 35 C98 35 70 52 64 96 C58 140 82 190 96 265 C108 278 123 275 132 235 C136 215 144 215 148 235 C157 275 172 278 184 265 C198 190 222 140 216 96 C210 52 182 35 140 35 Z"
-                    fill="url(#enamelGrad)" stroke="rgba(255,255,255,0.7)" stroke-width="2" />
-
-                  <!-- Dentin Inner Layer -->
-                  <path class="tooth-dentin"
-                    d="M140 58 C108 58 86 70 82 105 C78 138 96 178 108 240 C116 250 126 248 132 215 C136 195 144 195 148 215 C154 248 164 250 172 240 C184 178 202 138 198 105 C194 70 172 58 140 58 Z"
-                    fill="url(#dentinGrad)" opacity="0.75" stroke="#e8849a" stroke-width="1.2" stroke-dasharray="4 2" />
-
-                  <!-- Root Canal Pulp System (Active Glowing) -->
-                  <g class="tooth-root-canal" filter="url(#pulpGlow)">
-                    <!-- Pulp Chamber Crown -->
-                    <path
-                      d="M140 80 C120 80 108 88 105 108 C102 125 112 142 120 155 C124 162 126 172 124 195 C122 220 118 245 116 255 C120 256 124 254 126 245 C130 225 134 185 134 165 C134 155 138 152 140 152 C142 152 146 155 146 165 C146 185 150 225 154 245 C156 254 160 256 164 255 C162 245 158 220 156 195 C154 172 156 162 160 155 C168 142 178 125 175 108 C172 88 160 80 140 80 Z"
-                      fill="url(#pulpGrad)" stroke="#ff8da1" stroke-width="1.5" />
-
-                    <!-- Neural Apex Pulses -->
-                    <circle class="apex-pulse" cx="120" cy="254" r="4" fill="#ff4d6d" />
-                    <circle class="apex-pulse" cx="160" cy="254" r="4" fill="#ff4d6d" />
-                    <circle class="pulp-core-pulse" cx="140" cy="115" r="7" fill="#ffe066" opacity="0.85" />
-                  </g>
-
-                  <!-- Implant Fixture Layer (Toggleable) -->
-                  <g class="tooth-implant-system" style="opacity: 0; transition: opacity 0.4s ease;">
-                    <rect x="122" y="140" width="36" height="110" rx="6" fill="url(#implantGrad)" stroke="#94a3b8"
-                      stroke-width="1.5" />
-                    <line x1="122" y1="160" x2="158" y2="160" stroke="#475569" stroke-width="2" />
-                    <line x1="122" y1="180" x2="158" y2="180" stroke="#475569" stroke-width="2" />
-                    <line x1="122" y1="200" x2="158" y2="200" stroke="#475569" stroke-width="2" />
-                    <line x1="122" y1="220" x2="158" y2="220" stroke="#475569" stroke-width="2" />
-                    <polygon points="140,260 126,245 154,245" fill="#64748b" />
-                  </g>
-
-                  <!-- 3D Digital Scan Measurement HUD Points -->
-                  <g class="scan-hud-points">
-                    <g class="hud-marker marker-1" transform="translate(68, 95)">
-                      <circle r="4" fill="#e8849a" filter="url(#laserGlow)" />
-                      <circle r="9" fill="none" stroke="#e8849a" stroke-width="1" class="ping-ring" />
-                      <text x="14" y="4" fill="#ffffff" font-size="9" font-family="Inter, sans-serif"
-                        font-weight="600">3D Scan: 12.5µm</text>
-                    </g>
-                    <g class="hud-marker marker-2" transform="translate(195, 125)">
-                      <circle r="4" fill="#e8849a" filter="url(#laserGlow)" />
-                      <circle r="9" fill="none" stroke="#e8849a" stroke-width="1" class="ping-ring" />
-                      <text x="-95" y="4" fill="#ffffff" font-size="9" font-family="Inter, sans-serif"
-                        font-weight="600">Canal Sealing: 100%</text>
-                    </g>
-                    <g class="hud-marker marker-3" transform="translate(140, 260)">
-                      <circle r="4" fill="#ffd700" filter="url(#laserGlow)" />
-                      <circle r="9" fill="none" stroke="#ffd700" stroke-width="1" class="ping-ring" />
-                      <text x="12" y="4" fill="#ffd700" font-size="9" font-family="Inter, sans-serif"
-                        font-weight="600">Apex Depth Locked</text>
-                    </g>
-                  </g>
-                </svg>
-              </div>
-
-              <!-- Floating Pill Badges -->
-              <div class="holo-floating-badge badge-precision">
-                <span class="badge-icon">&#10024;</span>
-                <div>
-                  <strong>99.8% Precision</strong>
-                  <small>Intraoral 3D CAD/CAM</small>
-                </div>
-              </div>
-
-              <div class="holo-floating-badge badge-comfort">
-                <span class="badge-icon">&#9889;</span>
-                <div>
-                  <strong>Pain-Free Apex</strong>
-                  <small>Digital Endodontics</small>
-                </div>
-              </div>
-            </div>
-
-            <!-- Interactive View Switcher Controls -->
-            <div class="dental-3d-controls">
-              <button type="button" class="btn-3d-mode active" data-mode="scan">
-                <span>&#9881; 3D Laser Scan</span>
-              </button>
-              <button type="button" class="btn-3d-mode" data-mode="rootcanal">
-                <span>&#128302; Root Canal (Pulp)</span>
-              </button>
-              <button type="button" class="btn-3d-mode" data-mode="implant">
-                <span>&#9874; Implant Core</span>
-              </button>
             </div>
           </div>
         </div>
@@ -1352,7 +1234,6 @@
         <div class="faq-item" data-category="treatments" data-keywords="root canal rct pain endomotor hurt দাঁত ব্যথা রুট ক্যানাল">
           <button class="faq-question" id="faq-q1">
             <span class="faq-q-left">
-              <span class="faq-num">01</span>
               <span class="faq-title-wrap">
                 <span data-lang-en>Does root canal treatment hurt?</span>
                 <span data-lang-bn>রুট ক্যানাল চিকিৎসায় কি ব্যথা হয়?</span>
@@ -1372,7 +1253,6 @@
         <div class="faq-item" data-category="technology" data-keywords="intraoral scanner 3d digital mould crowns veneers implants স্ক্যানার ৩ডি">
           <button class="faq-question" id="faq-q2">
             <span class="faq-q-left">
-              <span class="faq-num">02</span>
               <span class="faq-title-wrap">
                 <span data-lang-en>What is an intraoral scanner?</span>
                 <span data-lang-bn>ইন্ট্রাওরাল স্ক্যানার কী?</span>
@@ -1392,7 +1272,6 @@
         <div class="faq-item" data-category="pricing" data-keywords="implant cost price 120000 consultation ইমপ্ল্যান্ট খরচ মূল্য">
           <button class="faq-question" id="faq-q3">
             <span class="faq-q-left">
-              <span class="faq-num">03</span>
               <span class="faq-title-wrap">
                 <span data-lang-en>How much does a dental implant cost?</span>
                 <span data-lang-bn>ডেন্টাল ইমপ্ল্যান্টের খরচ কত?</span>
@@ -1412,7 +1291,6 @@
         <div class="faq-item" data-category="chamber" data-keywords="children kids pediatric milk tooth pulpotomy space maintainer শিশু দুধ দাঁত">
           <button class="faq-question" id="faq-q4">
             <span class="faq-q-left">
-              <span class="faq-num">04</span>
               <span class="faq-title-wrap">
                 <span data-lang-en>Do you treat children?</span>
                 <span data-lang-bn>আপনারা কি শিশুদের চিকিৎসা করেন?</span>
@@ -1432,7 +1310,6 @@
         <div class="faq-item" data-category="chamber" data-keywords="book appointment serial whatsapp phone 01674878470 সময় বুকিং কল">
           <button class="faq-question" id="faq-q5">
             <span class="faq-q-left">
-              <span class="faq-num">05</span>
               <span class="faq-title-wrap">
                 <span data-lang-en>How do I book an appointment?</span>
                 <span data-lang-bn>কীভাবে অ্যাপয়েন্টমেন্ট নেবো?</span>
@@ -1452,7 +1329,6 @@
         <div class="faq-item" data-category="treatments" data-keywords="crown zirconia titanium porcelain pmma cap ক্রাউন জিরকোনিয়া ক্যাপ">
           <button class="faq-question" id="faq-q6">
             <span class="faq-q-left">
-              <span class="faq-num">06</span>
               <span class="faq-title-wrap">
                 <span data-lang-en>What types of dental crowns do you offer?</span>
                 <span data-lang-bn>আপনারা কোন ধরনের ডেন্টাল ক্রাউন দেন?</span>
@@ -1472,7 +1348,6 @@
         <div class="faq-item" data-category="treatments" data-keywords="pain painful anaesthesia gentle extraction filling আরামদায়ক অবশ ব্যথা">
           <button class="faq-question" id="faq-q7">
             <span class="faq-q-left">
-              <span class="faq-num">07</span>
               <span class="faq-title-wrap">
                 <span data-lang-en>Are dental treatments painful?</span>
                 <span data-lang-bn>দাঁতের চিকিৎসায় কি ব্যথা লাগে?</span>
@@ -1492,7 +1367,6 @@
         <div class="faq-item" data-category="technology" data-keywords="scanner safe radiation light pregnant children নিরাপদ রেডিয়েশন">
           <button class="faq-question" id="faq-q8">
             <span class="faq-q-left">
-              <span class="faq-num">08</span>
               <span class="faq-title-wrap">
                 <span data-lang-en>Is the intraoral scanner safe?</span>
                 <span data-lang-bn>ইন্ট্রাওরাল স্ক্যানার কি নিরাপদ?</span>
@@ -1512,7 +1386,6 @@
         <div class="faq-item" data-category="pricing" data-keywords="implant duration timeline months healing bone কত দিন সময় ইমপ্ল্যান্ট">
           <button class="faq-question" id="faq-q9">
             <span class="faq-q-left">
-              <span class="faq-num">09</span>
               <span class="faq-title-wrap">
                 <span data-lang-en>How long does a dental implant take?</span>
                 <span data-lang-bn>একটি ডেন্টাল ইমপ্ল্যান্ট করতে কত সময় লাগে?</span>
@@ -1532,7 +1405,6 @@
         <div class="faq-item" data-category="treatments" data-keywords="whitening bleaching 15000 brighten yellow stains সাদা করা হোয়াইটনিং">
           <button class="faq-question" id="faq-q10">
             <span class="faq-q-left">
-              <span class="faq-num">10</span>
               <span class="faq-title-wrap">
                 <span data-lang-en>Do you offer tooth whitening?</span>
                 <span data-lang-bn>আপনারা কি দাঁত সাদা করার সেবা দেন?</span>
@@ -1552,7 +1424,6 @@
         <div class="faq-item" data-category="chamber" data-keywords="emergency trauma knocked out tooth swelling severe pain জরুরি এক্সিডেন্ট">
           <button class="faq-question" id="faq-q11">
             <span class="faq-q-left">
-              <span class="faq-num">11</span>
               <span class="faq-title-wrap">
                 <span data-lang-en>What should I do in a dental emergency?</span>
                 <span data-lang-bn>দাঁতের জরুরি সমস্যায় কী করব?</span>
@@ -1572,7 +1443,6 @@
         <div class="faq-item" data-category="chamber" data-keywords="chamber location address parara road surovi barishal ঠিকানা অবস্থান কোথায়">
           <button class="faq-question" id="faq-q12">
             <span class="faq-q-left">
-              <span class="faq-num">12</span>
               <span class="faq-title-wrap">
                 <span data-lang-en>Where is the chamber located?</span>
                 <span data-lang-bn>চেম্বারটি কোথায় অবস্থিত?</span>
@@ -1602,29 +1472,71 @@
         </button>
       </div>
 
-      <!-- Interactive Help CTA Banner -->
+      <!-- High-Converting Interactive Doctor Consultation CTA Banner -->
       <div class="faq-cta-banner reveal">
-        <div class="faq-cta-content">
-          <div class="faq-cta-icon-box">
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-            </svg>
+        <div class="faq-cta-left">
+          <div class="faq-cta-doctor-avatar">
+            <img src="/assets/images/Dr. Nusrat Hero Shot.jpeg" alt="Dr. Nusrat Naiem" class="cta-avatar-img" width="76" height="76" loading="lazy">
+            <span class="cta-online-badge" title="Online &amp; Available"></span>
           </div>
           <div class="faq-cta-text">
-            <h4 data-lang-en>Have a different question?</h4>
-            <h4 data-lang-bn>অন্য কোনো প্রশ্ন বা জিজ্ঞাসা আছে?</h4>
-            <p data-lang-en>Dr. Nusrat Naiem is available to guide you on treatments, consultations, and personalized care.</p>
-            <p data-lang-bn>ডাঃ নুসরাত নাঈম সরাসরি আপনার যেকোনো দাঁতের সমস্যা ও চিকিৎসার ব্যাপারে দিকনির্দেশনা দিতে প্রস্তুত।</p>
+            <div class="faq-cta-tagline">
+              <span class="cta-pulse-dot"></span>
+              <span data-lang-en>DIRECT DOCTOR GUIDANCE</span>
+              <span data-lang-bn>সরাসরি চিকিৎসকের পরামর্শ</span>
+            </div>
+            <h3 class="faq-cta-title">
+              <span data-lang-en>Have a different question or need immediate advice?</span>
+              <span data-lang-bn>অন্য কোনো প্রশ্ন বা জরুরি পরামর্শ প্রয়োজন?</span>
+            </h3>
+            <p class="faq-cta-sub" data-lang-en>
+              Dr. Nusrat Naiem is available to guide you on treatments, review your dental case, and provide personalized care recommendations.
+            </p>
+            <p class="faq-cta-sub" data-lang-bn>
+              ডাঃ নুসরাত নাঈম সরাসরি আপনার যেকোনো দাঁতের সমস্যা, চিকিৎসা ও খরচের ব্যাপারে আন্তরিক দিকনির্দেশনা দিতে প্রস্তুত।
+            </p>
+            <div class="faq-cta-perks">
+              <span class="cta-perk-item">
+                <span class="perk-icon">⚡</span>
+                <span data-lang-en>Fast Response</span>
+                <span data-lang-bn>দ্রুত উত্তর</span>
+              </span>
+              <span class="cta-perk-item">
+                <span class="perk-icon">🛡️</span>
+                <span data-lang-en>100% Confidential</span>
+                <span data-lang-bn>গোপনীয়তা নিশ্চিত</span>
+              </span>
+              <span class="cta-perk-item">
+                <span class="perk-icon">📍</span>
+                <span data-lang-en>Band Road, Barishal</span>
+                <span data-lang-bn>বান্দ রোড, বরিশাল</span>
+              </span>
+            </div>
           </div>
         </div>
+
         <div class="faq-cta-actions">
-          <a href="https://wa.me/8801674878470?text=Hello%20Dr.%20Nusrat,%20I%20have%20a%20question%20about%20dental%20treatment" target="_blank" rel="noopener" class="btn btn-accent btn-sm">
-            <span>WhatsApp Dr. Nusrat</span>
-            <span>&rarr;</span>
+          <a href="https://wa.me/8801674878470?text=Hello%20Dr.%20Nusrat,%20I%20have%20a%20question%20about%20dental%20treatment" target="_blank" rel="noopener noreferrer" class="btn-cta-wa" id="faqCtaWaBtn">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+              <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.63.078-1.782-.397-1.472-.607-2.408-2.099-2.482-2.198-.073-.099-.604-.803-.604-1.533 0-.73.383-1.089.519-1.238.136-.149.297-.186.396-.186.099 0 .198.001.284.005.091.004.213-.034.333.254.124.297.421 1.026.458 1.101.037.074.062.161.012.26-.049.099-.074.161-.148.247-.074.086-.156.193-.223.259-.074.074-.151.155-.065.303.086.148.384.633.824 1.024.566.504 1.043.66 1.192.734.148.074.235.062.322-.037.086-.099.371-.433.47-.582.099-.148.198-.124.334-.074.136.049.865.408 1.014.482.148.074.247.111.284.173.037.062.037.359-.107.764z"/>
+            </svg>
+            <span data-lang-en>WhatsApp Dr. Nusrat</span>
+            <span data-lang-bn>ডাঃ নুসরাতকে হোয়াটসঅ্যাপ করুন</span>
+            <span class="cta-arrow">&rarr;</span>
           </a>
-          <a href="tel:01674878470" class="btn btn-outline btn-sm">
-            <span>Call 01674-878470</span>
+
+          <a href="tel:01674878470" class="btn-cta-call" id="faqCtaCallBtn">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <span>01674-878470</span>
           </a>
+
+          <span class="cta-hours-note">
+            <span class="clock-icon">⏰</span>
+            <span data-lang-en>Chamber: Sat–Thu 4:00 PM – 9:00 PM</span>
+            <span data-lang-bn>চেম্বার: শনি–বৃহঃ বিকাল ৪টা – রাত ৯টা</span>
+          </span>
         </div>
       </div>
     </div>

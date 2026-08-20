@@ -10,32 +10,69 @@ document.addEventListener('DOMContentLoaded', () => {
   const navToggle = document.getElementById('nav-toggle');
   const navLinks = document.getElementById('nav-links');
 
+  // Create or retrieve mobile backdrop
+  let navBackdrop = document.querySelector('.nav-backdrop');
+  if (!navBackdrop) {
+    navBackdrop = document.createElement('div');
+    navBackdrop.className = 'nav-backdrop';
+    document.body.appendChild(navBackdrop);
+  }
+
   // Shrink nav on scroll
   let lastScroll = 0;
   window.addEventListener('scroll', () => {
     const scrollY = window.scrollY;
-    if (scrollY > 60) {
-      nav.classList.add('scrolled');
+    if (scrollY > 40) {
+      nav?.classList.add('scrolled');
     } else {
-      nav.classList.remove('scrolled');
+      nav?.classList.remove('scrolled');
     }
     lastScroll = scrollY;
   }, { passive: true });
 
-  // Mobile hamburger
+  function openMobileNav() {
+    navLinks?.classList.add('open');
+    navToggle?.classList.add('open');
+    navToggle?.setAttribute('aria-expanded', 'true');
+    navBackdrop?.classList.add('open');
+    document.body.classList.add('nav-open');
+  }
+
+  function closeMobileNav() {
+    navLinks?.classList.remove('open');
+    navToggle?.classList.remove('open');
+    navToggle?.setAttribute('aria-expanded', 'false');
+    navBackdrop?.classList.remove('open');
+    document.body.classList.remove('nav-open');
+  }
+
+  // Mobile hamburger toggle
   if (navToggle) {
-    navToggle.addEventListener('click', () => {
-      navLinks.classList.toggle('open');
-      navToggle.textContent = navLinks.classList.contains('open') ? '✕' : '☰';
+    navToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (navLinks?.classList.contains('open')) {
+        closeMobileNav();
+      } else {
+        openMobileNav();
+      }
     });
   }
+
+  // Close on backdrop click
+  navBackdrop?.addEventListener('click', closeMobileNav);
 
   // Close mobile menu on link click
   navLinks?.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => {
-      navLinks.classList.remove('open');
-      navToggle.textContent = '☰';
+      closeMobileNav();
     });
+  });
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && navLinks?.classList.contains('open')) {
+      closeMobileNav();
+    }
   });
 
 
@@ -1438,6 +1475,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalTreatmentImg = document.getElementById('modalTreatmentImg');
   const modalCategoryBadge = document.getElementById('modalCategoryBadge');
   const modalPricePill = document.getElementById('modalPricePill');
+  const modalLearnMoreBtn = document.getElementById('modalLearnMoreBtn');
   const modalTreatmentTitle = document.getElementById('modalTreatmentTitle');
   const modalTreatmentDesc = document.getElementById('modalTreatmentDesc');
   const modalBenefitsList = document.getElementById('modalBenefitsList');
@@ -1548,14 +1586,47 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Mobile / Tablet toggle on tap
+    // Desktop & Mobile Card Interaction (Hover & Click Spotlight)
+    const servicesSection = document.getElementById('services');
     categoryShowcaseGrid.querySelectorAll('.cat-showcase-card').forEach(card => {
+      // Desktop Hover
+      card.addEventListener('mouseenter', () => {
+        if (window.innerWidth > 992) {
+          categoryShowcaseGrid.classList.add('has-hovered');
+          servicesSection?.classList.add('has-hovered');
+        }
+      });
+
+      card.addEventListener('mouseleave', () => {
+        if (window.innerWidth > 992) {
+          categoryShowcaseGrid.classList.remove('has-hovered');
+          servicesSection?.classList.remove('has-hovered');
+        }
+      });
+
+      // Click / Tap Toggle
       card.addEventListener('click', (e) => {
         if (e.target.closest('.wire-treatment-item')) return;
         const isActive = card.classList.contains('is-active');
         categoryShowcaseGrid.querySelectorAll('.cat-showcase-card').forEach(c => c.classList.remove('is-active'));
-        if (!isActive) card.classList.add('is-active');
+        if (!isActive) {
+          card.classList.add('is-active');
+          categoryShowcaseGrid.classList.add('has-active');
+          servicesSection?.classList.add('has-active');
+        } else {
+          categoryShowcaseGrid.classList.remove('has-active');
+          servicesSection?.classList.remove('has-active');
+        }
       });
+    });
+
+    // Close active card when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#categoryShowcaseGrid')) {
+        categoryShowcaseGrid.querySelectorAll('.cat-showcase-card').forEach(c => c.classList.remove('is-active'));
+        categoryShowcaseGrid.classList.remove('has-active');
+        servicesSection?.classList.remove('has-active');
+      }
     });
   }
 
@@ -1573,8 +1644,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (modalCategoryBadge) modalCategoryBadge.textContent = isBn ? t.catBn : t.cat;
     if (modalPricePill) modalPricePill.textContent = 'Est. ' + t.price;
+    if (modalLearnMoreBtn) {
+      modalLearnMoreBtn.href = `/services#${t.id}`;
+    }
     if (modalTreatmentTitle) {
-      modalTreatmentTitle.innerHTML = `<span class="modal-title-en">${t.title}</span><span class="modal-title-bn">${t.titleBn}</span>`;
+      modalTreatmentTitle.innerHTML = `<span data-lang-en>${t.title}</span><span data-lang-bn>${t.titleBn}</span>`;
     }
     if (modalTreatmentDesc) {
       modalTreatmentDesc.innerHTML = `<p class="desc-text">${isBn ? t.descBn : t.desc}</p>`;
@@ -1792,75 +1866,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   setupTilt('heroTilt', 6);
-  setupTilt('dental3dCard', 8);
 
-  // ── Roadmap & 3D Dental Mode Interactions ──
+  // ── Why Choose Us Roadmap Interactions ──
   const roadmapItems = document.querySelectorAll('.roadmap-item');
-  const roadmapProgress = document.getElementById('roadmapProgress');
-  const hudStatusText = document.getElementById('hudStatusText');
-  const toothEnamel = document.querySelector('.tooth-enamel');
-  const toothDentin = document.querySelector('.tooth-dentin');
-  const toothRootCanal = document.querySelector('.tooth-root-canal');
-  const toothImplant = document.querySelector('.tooth-implant-system');
-  const laserSweep = document.querySelector('.holo-laser-sweep');
-  const modeBtns = document.querySelectorAll('.btn-3d-mode');
-
-  function set3dDentalMode(mode) {
-    modeBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.mode === mode));
-
-    if (mode === 'scan') {
-      if (hudStatusText) hudStatusText.textContent = '3D INTRAORAL SCAN · ACTIVE';
-      if (laserSweep) laserSweep.style.display = 'block';
-      if (toothEnamel) toothEnamel.style.opacity = '1';
-      if (toothDentin) toothDentin.style.opacity = '0.75';
-      if (toothRootCanal) toothRootCanal.style.opacity = '0.4';
-      if (toothImplant) toothImplant.style.opacity = '0';
-    } else if (mode === 'rootcanal') {
-      if (hudStatusText) hudStatusText.textContent = 'ROOT CANAL (ENDODONTICS) · PULP ACTIVE';
-      if (laserSweep) laserSweep.style.display = 'block';
-      if (toothEnamel) toothEnamel.style.opacity = '0.35';
-      if (toothDentin) toothDentin.style.opacity = '0.85';
-      if (toothRootCanal) toothRootCanal.style.opacity = '1';
-      if (toothImplant) toothImplant.style.opacity = '0';
-    } else if (mode === 'implant') {
-      if (hudStatusText) hudStatusText.textContent = 'TITANIUM IMPLANT FIXTURE · LOCKED';
-      if (laserSweep) laserSweep.style.display = 'none';
-      if (toothEnamel) toothEnamel.style.opacity = '0.85';
-      if (toothDentin) toothDentin.style.opacity = '0.2';
-      if (toothRootCanal) toothRootCanal.style.opacity = '0';
-      if (toothImplant) toothImplant.style.opacity = '1';
-    }
-  }
-
-  modeBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      set3dDentalMode(btn.dataset.mode);
-    });
-  });
-
-  roadmapItems.forEach((item, idx) => {
+  roadmapItems.forEach((item) => {
     item.addEventListener('mouseenter', () => {
       roadmapItems.forEach(i => i.classList.remove('active'));
       item.classList.add('active');
-      if (roadmapProgress) {
-        const pct = ((idx + 1) / roadmapItems.length) * 100;
-        roadmapProgress.style.height = pct + '%';
-      }
-      if (idx === 0) set3dDentalMode('scan');
-      else if (idx === 1 || idx === 2) set3dDentalMode('rootcanal');
-      else if (idx === 3) set3dDentalMode('implant');
     });
 
     item.addEventListener('click', () => {
       roadmapItems.forEach(i => i.classList.remove('active'));
       item.classList.add('active');
-      if (roadmapProgress) {
-        const pct = ((idx + 1) / roadmapItems.length) * 100;
-        roadmapProgress.style.height = pct + '%';
-      }
-      if (idx === 0) set3dDentalMode('scan');
-      else if (idx === 1 || idx === 2) set3dDentalMode('rootcanal');
-      else if (idx === 3) set3dDentalMode('implant');
     });
   });
 
@@ -2109,7 +2126,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
           btn.innerHTML = `
             <span class="faq-q-left">
-              <span class="faq-num">${numStr}</span>
               <span class="faq-title-wrap">
                 <span data-lang-en>${f.question_en}</span>
                 <span data-lang-bn>${f.question_bn}</span>
