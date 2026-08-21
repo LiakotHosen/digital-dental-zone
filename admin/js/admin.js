@@ -1072,6 +1072,18 @@
         } else {
           saveRes = await client.from('clinic_settings').upsert({ id: 1, ...payload });
         }
+
+        // Schema fallback if logo_url column does not exist yet in Supabase
+        if (saveRes && saveRes.error && saveRes.error.message && saveRes.error.message.includes('logo_url')) {
+          const payloadNoLogo = { ...payload };
+          delete payloadNoLogo.logo_url;
+          if (settings && settings.id) {
+            saveRes = await client.from('clinic_settings').update(payloadNoLogo).eq('id', settings.id);
+          } else {
+            saveRes = await client.from('clinic_settings').upsert({ id: 1, ...payloadNoLogo });
+          }
+        }
+
         if (saveRes && saveRes.error) throw saveRes.error;
 
         // Cache locally for instant site-wide effect

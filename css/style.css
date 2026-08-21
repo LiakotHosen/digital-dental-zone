@@ -3509,9 +3509,32 @@ footer {
   padding: var(--space-lg);
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
+  align-items: center;
   justify-content: space-between;
+  gap: var(--space-md);
   font-size: var(--fs-xs);
   color: var(--muted-light);
+  flex-wrap: wrap;
+}
+
+.footer-developer {
+  color: var(--muted-light);
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.footer-developer a {
+  color: #38bdf8;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.footer-developer a:hover {
+  color: #7dd3fc;
+  text-decoration: underline;
 }
 
 /* ═══════════════════════════════════════════════════
