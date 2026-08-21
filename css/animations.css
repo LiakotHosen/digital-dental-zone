@@ -24,7 +24,8 @@
 .reveal-right.revealed,
 .reveal-scale.revealed {
   opacity: 1;
-  transform: translate(0) scale(1);
+  transform: none;
+  will-change: auto;
 }
 
 /* ── Stagger Children ── */

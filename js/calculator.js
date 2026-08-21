@@ -119,6 +119,16 @@
         row.className = 'calc-item';
         row.dataset.id = item.id;
 
+        const leftWrap = document.createElement('div');
+        leftWrap.style.display = 'flex';
+        leftWrap.style.alignItems = 'center';
+        leftWrap.style.flex = '1';
+        leftWrap.style.minWidth = '0';
+
+        const check = document.createElement('span');
+        check.className = 'calc-item-check';
+        check.innerHTML = '<i class="fa-solid fa-check"></i>';
+
         const name = document.createElement('span');
         name.className = 'calc-item-name';
         const enN = document.createElement('span');
@@ -129,6 +139,9 @@
         bnN.textContent = item.bn;
         name.appendChild(enN);
         name.appendChild(bnN);
+
+        leftWrap.appendChild(check);
+        leftWrap.appendChild(name);
 
         const price = document.createElement('span');
         price.className = 'calc-item-price';
@@ -141,7 +154,7 @@
         price.appendChild(enP);
         price.appendChild(bnP);
 
-        row.appendChild(name);
+        row.appendChild(leftWrap);
         row.appendChild(price);
 
         row.addEventListener('click', () => toggleItem(item, row));
@@ -336,5 +349,9 @@
 
     const submitBtn = document.getElementById('calc-lead-submit');
     if (submitBtn) submitBtn.addEventListener('click', submitLead);
+  });
+
+  document.addEventListener('ddz-langchange', () => {
+    renderReceipt();
   });
 })();

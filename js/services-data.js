@@ -502,7 +502,7 @@ const DDZ_SERVICES_CATEGORIES = [
         "title": "RCT + Post Core + Zirconia Crown (Full Package)",
         "titleBn": "রুট ক্যানাল + পোস্ট কোর + জিরকোনিয়া ক্রাউন (সম্পূর্ণ প্যাকেজ)",
         "price": "৳25,000",
-        "image": "assets/treatment/2.c. RCT + Post Core + Zirconia Crown.png",
+        "image": "/assets/treatment/2.c-rct-post-core-zirconia-crown.png",
         "badge": "Full Package",
         "badgeBn": "সম্পূর্ণ প্যাকেজ",
         "desc": "Comprehensive full-mouth preservation package including pain-free RCT, structural fiber post-core buildup, and a custom CAD/CAM Zirconia diamond crown.",

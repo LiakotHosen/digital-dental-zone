@@ -8,13 +8,35 @@
 
   const filterPills = document.querySelectorAll('.filter-pill');
   const categorySections = document.querySelectorAll('.service-category-section');
-  const treatmentCards = document.querySelectorAll('.service-detail-card');
   const searchInput = document.getElementById('servicesSearchInput');
   const clearSearchBtn = document.getElementById('clearSearchBtn');
   const noSearchResults = document.getElementById('noSearchResults');
 
   let currentFilter = 'all';
   let searchQuery = '';
+
+  const CAT_MAP = {
+    'all': 'all',
+    'diagnostics': 'diagnostics',
+    'diag': 'diagnostics',
+    'rct': 'rct',
+    'root-canal': 'rct',
+    'surgery': 'surgery',
+    'oral-surgery': 'surgery',
+    'prostho': 'prosthodontics',
+    'prosthodontics': 'prosthodontics',
+    'ortho': 'orthodontics',
+    'orthodontics': 'orthodontics',
+    'pedia': 'pediatric',
+    'pediatric': 'pediatric',
+    'pediatrics': 'pediatric'
+  };
+
+  function normalizeCat(cat) {
+    if (!cat) return 'all';
+    const c = cat.toLowerCase().trim();
+    return CAT_MAP[c] || c;
+  }
 
   // Category Filter Pills Click Handler
   filterPills.forEach(pill => {
@@ -26,7 +48,7 @@
       pill.classList.add('active');
       pill.setAttribute('aria-selected', 'true');
 
-      currentFilter = pill.dataset.filter;
+      currentFilter = pill.dataset.filter || 'all';
       applyFilterAndSearch();
     });
   });
@@ -55,19 +77,22 @@
   // Combined Filter and Search Function
   function applyFilterAndSearch() {
     let visibleTotal = 0;
+    const activeCat = normalizeCat(currentFilter);
 
     categorySections.forEach(section => {
-      const sectionCatId = section.dataset.categoryId;
-      const matchesCategory = currentFilter === 'all' || currentFilter === sectionCatId;
+      const sectionCatId = normalizeCat(section.dataset.categoryId || section.id.replace('cat-', ''));
+      const matchesCategory = activeCat === 'all' || activeCat === sectionCatId;
 
       let sectionVisibleCount = 0;
       const cards = section.querySelectorAll('.service-detail-card');
 
       cards.forEach(card => {
+        const cardCat = normalizeCat(card.dataset.category);
+        const matchesCardCategory = activeCat === 'all' || activeCat === cardCat || activeCat === sectionCatId;
         const textContent = (card.textContent || '').toLowerCase();
         const matchesSearch = !searchQuery || textContent.includes(searchQuery);
 
-        if (matchesCategory && matchesSearch) {
+        if (matchesCategory && matchesCardCategory && matchesSearch) {
           card.classList.remove('is-hidden');
           sectionVisibleCount++;
           visibleTotal++;
@@ -76,7 +101,7 @@
         }
       });
 
-      if (sectionVisibleCount > 0) {
+      if (sectionVisibleCount > 0 && matchesCategory) {
         section.classList.remove('is-hidden');
       } else {
         section.classList.add('is-hidden');
@@ -98,15 +123,17 @@
 
     // If it's a treatment card, ensure its category is visible
     if (targetElement.classList.contains('service-detail-card')) {
-      const catId = targetElement.dataset.category;
-      if (currentFilter !== 'all' && currentFilter !== catId) {
-        // Reset filter to 'all' or switch to that category
+      const catId = normalizeCat(targetElement.dataset.category);
+      if (normalizeCat(currentFilter) !== 'all' && normalizeCat(currentFilter) !== catId) {
         filterPills.forEach(p => {
-          const isMatch = p.dataset.filter === catId || p.dataset.filter === 'all';
-          if (p.dataset.filter === catId) {
-            filterPills.forEach(x => x.classList.remove('active'));
+          if (normalizeCat(p.dataset.filter) === catId) {
+            filterPills.forEach(x => {
+              x.classList.remove('active');
+              x.setAttribute('aria-selected', 'false');
+            });
             p.classList.add('active');
-            currentFilter = catId;
+            p.setAttribute('aria-selected', 'true');
+            currentFilter = p.dataset.filter;
           }
         });
         applyFilterAndSearch();
@@ -127,19 +154,36 @@
         }, 4000);
       }, 150);
     } else if (targetElement.classList.contains('service-category-section')) {
+      const catId = normalizeCat(targetElement.dataset.categoryId || targetElement.id.replace('cat-', ''));
+      filterPills.forEach(p => {
+        if (normalizeCat(p.dataset.filter) === catId) {
+          filterPills.forEach(x => {
+            x.classList.remove('active');
+            x.setAttribute('aria-selected', 'false');
+          });
+          p.classList.add('active');
+          p.setAttribute('aria-selected', 'true');
+          currentFilter = p.dataset.filter;
+        }
+      });
+      applyFilterAndSearch();
       setTimeout(() => {
         targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 150);
     }
   }
 
-  // Listen for hash changes (e.g. user clicks another treatment link on same page)
+  // Listen for hash changes
   window.addEventListener('hashchange', handleUrlHashHighlight);
 
   // Run on initial page load
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', handleUrlHashHighlight);
+    document.addEventListener('DOMContentLoaded', () => {
+      applyFilterAndSearch();
+      handleUrlHashHighlight();
+    });
   } else {
+    applyFilterAndSearch();
     handleUrlHashHighlight();
   }
 
